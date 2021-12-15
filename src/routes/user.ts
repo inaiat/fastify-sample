@@ -13,11 +13,6 @@ export const UserRoute: FastifyPluginAsync = async (
   const userService = appModule.getUserService();
 
   fastify
-    .setErrorHandler(async (error, req, reply) => {
-      console.error(error);
-      reply.status(500);
-      reply.send();
-    })
     .get('/', async (request, reply) => {
       return userService.findAll();
     })

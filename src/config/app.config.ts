@@ -28,8 +28,6 @@ export class AppModule {
   }
 
   migrations() {
-    const client: MongoClient = this.injector.resolve('client');
-    const db = client.db('user');
-    up(db, client);
+    up(this.mongoDb, this.mongoClient);
   }
 }
