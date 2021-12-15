@@ -1,6 +1,10 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { ObjectId } from 'mongodb';
 
+export interface BaseEntity {
+  _id?: ObjectId;
+}
+
 export const UserModelSchema = {
   type: 'object',
   properties: {
@@ -16,8 +20,4 @@ export const UserModelSchema = {
 
 export type UserModel = FromSchema<typeof UserModelSchema>;
 
-interface BaseEntity {
-  _id?: ObjectId;
-}
-
-export type UserDomain = BaseEntity & UserModel;
+export type UserSchema = BaseEntity & UserModel;

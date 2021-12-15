@@ -1,5 +1,5 @@
 import * as mongoDB from 'mongodb';
-import { UserDomain, UserModel } from './user.model';
+import { UserSchema, UserModel } from './user.model';
 
 export class UserRepository {
   constructor(private readonly collection: mongoDB.Collection<UserModel>) {}
@@ -10,7 +10,7 @@ export class UserRepository {
     return (await this.collection.find({}).toArray()) as UserModel[];
   }
 
-  async create(user: UserDomain) {
+  async create(user: UserSchema) {
     try {
       const result = await this.collection.insertOne(user);
       console.log('Document created successfully', result);
