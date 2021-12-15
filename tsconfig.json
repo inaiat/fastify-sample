@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "declaration": true,
+    "pretty": true,
+    "outDir": "./dist",
+    // "rootDirs": ["./src", "./test"],
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": "./",
+    "rootDirs": ["./src"],
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ]
+      // "@test/*": ["./test/*"]
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "esnext"
+    ]
+  },
+  // "include": ["./src/**/*.ts"]
+  // "exclude": [
+  //   "./test/**/*"
+  // ]
+}
