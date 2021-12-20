@@ -19,9 +19,8 @@ export class UserService {
   }
   constructor(private readonly userCollection: Promise<Model<User>>) {}
 
-  public static inject = ['userCollection'] as const;
-
   async findAll(): Promise<User[]> {
+    console.log(JSON.stringify(this.userCollection))
     return (await this.userCollection).find({});
   }
 }

@@ -1,5 +1,7 @@
 import fastify, { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { UserRoute } from './routes/user';
+import { diInit } from './config/app.config';
+import { fastifyAwilixPlugin } from 'fastify-awilix/lib/classic';
 
 export type AppOptions = {
   // Place your custom options for app below here.
@@ -8,6 +10,10 @@ export const app: FastifyPluginAsync<AppOptions> = async (
   fastify,
   opts,
 ): Promise<void> => {
+
+  diInit()
+
+  fastify.register(fastifyAwilixPlugin);
   fastify.register(require('fastify-swagger'), {
     exposeRoute: true,
     routePrefix: '/docs',

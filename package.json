@@ -18,14 +18,15 @@
   "dependencies": {
     "@sinclair/typebox": "^0.23.1",
     "@types/mongoose": "^5.11.97",
+    "awilix": "^6.0.0",
     "dotenv": "^8.2.0",
     "fastify": "^3.25.0",
+    "fastify-awilix": "^1.2.0",
     "fastify-plugin": "^3.0.0",
     "fastify-swagger": "^4.13.0",
     "json-schema-to-ts": "^1.6.4",
     "mongodb": "^4.2.2",
-    "mongoose": "^6.1.2",
-    "typed-inject": "^3.0.1"
+    "mongoose": "^6.1.2"
   },
   "devDependencies": {
     "@types/node": "^16.11.12",

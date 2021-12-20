@@ -1,5 +1,5 @@
-import { AppModule } from '@src/config/app.config';
 import { UserModel, UserModelSchema } from '@src/user/user.model';
+import { UserService } from '@src/user/user.service';
 import {
   FastifyInstance,
   FastifyPluginAsync,
@@ -7,16 +7,16 @@ import {
 } from 'fastify';
 import fp from 'fastify-plugin';
 
-const appModule = new AppModule();
-
 export const UserRoute: FastifyPluginAsync = async (
   fastify: FastifyInstance,
   options: FastifyPluginOptions,
 ): Promise<void> => {
-  const userService = appModule.getUserService();
+  
+  const userService = fastify.diContainer.resolve<UserService>("userService");
 
   fastify
     .setErrorHandler(async (error, req, reply) => {
+      console.error(error);
       reply.status(400).send(new Error(error.message));
     })
     .get('/', async (request, reply) => {
