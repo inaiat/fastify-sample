@@ -11,8 +11,7 @@ export const UserRoute: FastifyPluginAsync = async (
   fastify: FastifyInstance,
   options: FastifyPluginOptions,
 ): Promise<void> => {
-  
-  const userService = fastify.diContainer.resolve<UserService>("userService");
+  const userService = fastify.diContainer.resolve<UserService>('userService');
 
   fastify
     .setErrorHandler(async (error, req, reply) => {

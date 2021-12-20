@@ -10,8 +10,7 @@ export const app: FastifyPluginAsync<AppOptions> = async (
   fastify,
   opts,
 ): Promise<void> => {
-
-  diInit()
+  diInit();
 
   fastify.register(fastifyAwilixPlugin);
   fastify.register(require('fastify-swagger'), {

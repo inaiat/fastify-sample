@@ -20,7 +20,7 @@ export class UserService {
   constructor(private readonly userCollection: Promise<Model<User>>) {}
 
   async findAll(): Promise<User[]> {
-    console.log(JSON.stringify(this.userCollection))
+    console.log(JSON.stringify(this.userCollection));
     return (await this.userCollection).find({});
   }
 }
