@@ -1,5 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { ObjectId } from 'mongodb';
+import { model, Schema } from 'mongoose';
 
 export interface BaseEntity {
   _id?: ObjectId;
@@ -20,4 +21,17 @@ export const UserModelSchema = {
 
 export type UserModel = FromSchema<typeof UserModelSchema>;
 
-export type UserSchema = BaseEntity & UserModel;
+export interface User extends BaseEntity {
+  name: string;
+  yearOfBirth: number;
+  age: number;
+}
+
+export const UserSchema = model<User>(
+  'User',
+  new Schema<User>({
+    name: { type: String, required: true, maxlength: 10 },
+    yearOfBirth: { type: Number, required: true, min: 1900 },
+    age: { type: Number, required: true, min: 18, max: 200 },
+  }),
+);

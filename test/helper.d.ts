@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import * as tap from 'tap';
 export declare type Test = typeof tap['Test']['prototype'];
 declare function config(): Promise<{}>;

@@ -1,19 +1,27 @@
 import { ObjectId } from 'mongodb';
-import { UserSchema, UserModel } from './user.model';
-import { UserRepository } from './user.repository';
+import { Model } from 'mongoose';
+import { User, UserModel } from './user.model';
 
 export class UserService {
-  async create(user: UserModel, id: ObjectId = new ObjectId()) : Promise<ObjectId> {
-    const userDomain = user as UserSchema
-    userDomain._id = id
-    await this.userRepository.create(userDomain);
-    return userDomain._id
+  async create(
+    user: UserModel,
+    id: ObjectId = new ObjectId(),
+  ): Promise<ObjectId> {
+    const userDomain: User = {
+      _id: id,
+      name: user.name,
+      age: user.age,
+      yearOfBirth: new Date().getFullYear() - user.age,
+    };
+
+    const doc = (await this.userCollection).create(userDomain);
+    return (await doc)._id;
   }
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userCollection: Promise<Model<User>>) {}
 
-  public static inject = ['userRepository'] as const;
+  public static inject = ['userCollection'] as const;
 
-  findAll(): Promise<UserModel[]> {
-    return this.userRepository.findAll();
+  async findAll(): Promise<User[]> {
+    return (await this.userCollection).find({});
   }
 }

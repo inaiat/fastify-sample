@@ -1,33 +1,32 @@
-import { UserModel } from '@src/user/user.model';
-import { UserRepository } from '@src/user/user.repository';
-import { UserService } from '@src/user/user.service';
-import { up } from 'migrate-mongo';
-import { MongoClient } from 'mongodb';
+import { UserSchema } from '@src/user/user.model';
 import { createInjector } from 'typed-inject';
-import { MongoConfig } from './mongo.config';
+import * as mongoose from 'mongoose';
+import { UserService } from '@src/user/user.service';
+
+async function createConnection(): Promise<mongoose.Connection> {
+  return mongoose.createConnection('mongodb://localhost:27017/test');
+}
+
+async function createCollection<T>(
+  connection: Promise<mongoose.Connection>,
+  collectionName: string,
+  model: mongoose.Model<T>,
+): Promise<mongoose.Model<T>> {
+  return (await connection).model(collectionName, model.schema);
+}
 
 export class AppModule {
-  private mongoClient = MongoConfig.createClient();
-  private mongoDb = MongoConfig.createDatabase('user', this.mongoClient);
+  private connection = createConnection();
 
   injector = createInjector()
-    .provideValue('client', this.mongoClient)
-    .provideValue('database', this.mongoDb)
+    .provideValue('client', this.connection)
     .provideValue(
       'userCollection',
-      MongoConfig.createCollection<UserModel>({
-        colName: 'user',
-        db: this.mongoDb,
-      }),
+      createCollection(this.connection, 'User', UserSchema),
     )
-    .provideClass('userRepository', UserRepository)
     .provideClass('userService', UserService);
 
   getUserService(): UserService {
     return this.injector.injectClass(UserService);
-  }
-
-  migrations() {
-    up(this.mongoDb, this.mongoClient);
   }
 }

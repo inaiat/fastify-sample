@@ -8,10 +8,23 @@ export const app: FastifyPluginAsync<AppOptions> = async (
   fastify,
   opts,
 ): Promise<void> => {
+  fastify.register(require('fastify-swagger'), {
+    exposeRoute: true,
+    routePrefix: '/docs',
+    swagger: {
+      info: {
+        title: 'Test swagger',
+        description: 'Testing the Fastify swagger API',
+        version: '0.1.0',
+      },
+      schemes: ['http'],
+    },
+  });
   fastify.register(UserRoute);
 };
 
-const server: FastifyInstance = fastify();
+const server: FastifyInstance = fastify({ logger: true });
+
 server.register(app);
 
 const start = async () => {
