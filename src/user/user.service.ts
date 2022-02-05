@@ -1,8 +1,8 @@
-import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
-import { User, UserModel } from './user.model';
+import { ObjectId } from 'mongodb'
+import { Model } from 'mongoose'
+import { User, UserModel } from './user.model'
 
-type UserCollection = Promise<Model<User>>;
+type UserCollection = Promise<Model<User>>
 
 export function createUserService(userCollection: UserCollection) {
   return async (user: UserModel, id: ObjectId = new ObjectId()) => {
@@ -11,12 +11,12 @@ export function createUserService(userCollection: UserCollection) {
       name: user.name,
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
-    };
-    const doc = (await userCollection).create(userDomain);
-    return (await doc)._id;
-  };
+    }
+    const doc = (await userCollection).create(userDomain)
+    return (await doc)._id
+  }
 }
 
 export function findAllService(userCollection: UserCollection) {
-  return async () => (await userCollection).find({});
+  return async () => (await userCollection).find({})
 }

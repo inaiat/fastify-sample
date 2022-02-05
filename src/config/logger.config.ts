@@ -1,29 +1,29 @@
-import { FastifyServerOptions } from 'fastify';
-import pino, { LoggerOptions } from 'pino';
-import { nanoid } from 'nanoid';
+import { FastifyServerOptions } from 'fastify'
+import pino, { LoggerOptions } from 'pino'
+import { nanoid } from 'nanoid'
 
-const xRequestId = 'x-request-id';
+const xRequestId = 'x-request-id'
 
 export type CustomServerOptions = {
-  logger: LoggerOptions;
-} & Partial<FastifyServerOptions>;
+  logger: LoggerOptions
+} & Partial<FastifyServerOptions>
 
 const formatter = {
   level(level: string) {
-    return { level };
+    return { level }
   },
-};
+}
 
 export const serverOptions: CustomServerOptions = {
   genReqId: (req) => {
-    const serverReqId = req.headers[xRequestId] as string | undefined;
-    if (serverReqId) return serverReqId;
-    return nanoid();
+    const serverReqId = req.headers[xRequestId] as string | undefined
+    if (serverReqId) return serverReqId
+    return nanoid()
   },
   logger: {
     level: 'info',
     formatters: formatter,
   },
-};
+}
 
-export const logger = pino(serverOptions.logger);
+export const logger = pino(serverOptions.logger)

@@ -1,29 +1,34 @@
-import { UserModel, UserModelSchema } from '@src/user/user.model';
-import {
-  FastifyInstance,
-  FastifyPluginAsync,
-  FastifyPluginOptions,
-} from 'fastify';
-import fp from 'fastify-plugin';
+import { UserModel, UserModelSchema } from '@src/user/user.model'
+import { FastifyInstance, FastifyPluginAsync } from 'fastify'
+import { Type } from 'fastify-typebox'
+import { REPL_MODE_SLOPPY } from 'repl'
 
-export const UserRoute: FastifyPluginAsync = async (
-  fastify: FastifyInstance,
-  options: FastifyPluginOptions,
-): Promise<void> => {
-  
-
+const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   fastify
     .setErrorHandler(async (error, req, reply) => {
-      console.error(error);
-      reply.status(400).send(new Error(error.message));
+      console.error(error)
+      reply.status(400).send(new Error(error.message))
     })
-    .get('/', async (request, reply) => {
-      const findAllService = fastify.diContainer.cradle.findAllService;
-      return findAllService();
+    .get('/', async () => {
+      const findAllService = fastify.diContainer.cradle.findAllService
+      return findAllService()
     })
-    .get('/test', async (request, reply) => {
-      throw new Error('acabou');
-    })
+    .get<{ Params: { code: number } }>(
+      '/code/:code',
+      {
+        schema: {
+          params: Type.Object({ code: Type.Number({ minimum: 200, maximum: 599 }) }),
+        },
+      },
+      async (request, reply) => {
+        const { code } = request.params
+        if (code >= 400) {
+          reply.badRequest('something wrong')
+        } else {
+          reply.send("It's fine.")
+        }
+      }
+    )
     .post<{ Body: UserModel }>(
       '/',
       {
@@ -36,12 +41,12 @@ export const UserRoute: FastifyPluginAsync = async (
         },
       },
       async (req, reply) => {
-        const createUserService = fastify.diContainer.cradle.createUserService;
-        const user = req.body as UserModel;
-        await createUserService(user);
-        reply.status(201).send();
-      },
-    );
-};
+        const createUserService = fastify.diContainer.cradle.createUserService
+        const user = req.body as UserModel
+        await createUserService(user)
+        reply.status(201).send()
+      }
+    )
+}
 
-export default fp(UserRoute);
+export default userRoute
