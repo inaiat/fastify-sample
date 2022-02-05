@@ -20,3 +20,5 @@ export const appConfig = (): Env => {
     schema: schema,
   })
 }
+
+export type AppError = { message?: string; validationError: boolean; throwable: unknown }

@@ -1,8 +1,19 @@
+import { AppError } from '@src/config/app.config'
 import { ObjectId } from 'mongodb'
-import { Model } from 'mongoose'
+import { Model, Error } from 'mongoose'
+import { errAsync, ResultAsync } from 'neverthrow'
 import { User, UserModel } from './user.model'
 
 type UserCollection = Promise<Model<User>>
+
+const toParseError = (e: unknown): AppError => {
+  const ve = e instanceof Error.ValidationError
+  if (ve) {
+    return { message: e.message, validationError: true, throwable: e }
+  } else {
+    return { message: 'Database operation error', validationError: false, throwable: e }
+  }
+}
 
 export function createUserService(userCollection: UserCollection) {
   return async (user: UserModel, id: ObjectId = new ObjectId()) => {
@@ -12,11 +23,14 @@ export function createUserService(userCollection: UserCollection) {
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
     }
-    const doc = (await userCollection).create(userDomain)
-    return (await doc)._id
+    // To simulate some business logic
+    if (user.name.toLowerCase() === 'pareto')
+      return errAsync({ throwable: new Error('You are not allowed to register'), validationError: true })
+    return ResultAsync.fromPromise((await userCollection).create(userDomain), toParseError)
   }
 }
 
 export function findAllService(userCollection: UserCollection) {
-  return async () => (await userCollection).find({})
+  const findAll = async () => (await userCollection).find<User>({})
+  return async () => ResultAsync.fromPromise(findAll(), toParseError)
 }
