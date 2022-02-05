@@ -1,5 +1,4 @@
 import { UserModel, UserModelSchema } from '@src/user/user.model';
-import { UserService } from '@src/user/user.service';
 import {
   FastifyInstance,
   FastifyPluginAsync,
@@ -11,7 +10,7 @@ export const UserRoute: FastifyPluginAsync = async (
   fastify: FastifyInstance,
   options: FastifyPluginOptions,
 ): Promise<void> => {
-  const userService = fastify.diContainer.resolve<UserService>('userService');
+  
 
   fastify
     .setErrorHandler(async (error, req, reply) => {
@@ -19,7 +18,8 @@ export const UserRoute: FastifyPluginAsync = async (
       reply.status(400).send(new Error(error.message));
     })
     .get('/', async (request, reply) => {
-      return userService.findAll();
+      const findAllService = fastify.diContainer.cradle.findAllService;
+      return findAllService();
     })
     .get('/test', async (request, reply) => {
       throw new Error('acabou');
@@ -36,8 +36,9 @@ export const UserRoute: FastifyPluginAsync = async (
         },
       },
       async (req, reply) => {
+        const createUserService = fastify.diContainer.cradle.createUserService;
         const user = req.body as UserModel;
-        await userService.create(user);
+        await createUserService(user);
         reply.status(201).send();
       },
     );

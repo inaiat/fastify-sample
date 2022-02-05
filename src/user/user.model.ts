@@ -1,30 +1,17 @@
-import { FromSchema } from 'json-schema-to-ts';
 import { ObjectId } from 'mongodb';
 import { model, Schema } from 'mongoose';
+import { Static, Type } from '@sinclair/typebox';
 
-export interface BaseEntity {
+export const UserModelSchema = Type.Object({
+  name: Type.String({ maxLength: 100 }),
+  age: Type.Number({ maximum: 200, minimum: 18 }),
+});
+
+export type UserModel = Static<typeof UserModelSchema>;
+
+export interface User extends UserModel {
   _id?: ObjectId;
-}
-
-export const UserModelSchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    age: {
-      type: 'number',
-      maximum: 200,
-      minimum: 18,
-    },
-  },
-  required: ['name', 'age'],
-} as const;
-
-export type UserModel = FromSchema<typeof UserModelSchema>;
-
-export interface User extends BaseEntity {
-  name: string;
   yearOfBirth: number;
-  age: number;
 }
 
 export const UserSchema = model<User>(

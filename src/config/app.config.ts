@@ -1,31 +1,23 @@
-import { UserSchema } from '@src/user/user.model';
-import * as mongoose from 'mongoose';
-import { UserService } from '@src/user/user.service';
+import { Static, Type } from '@sinclair/typebox';
+import * as dotenv from 'dotenv';
+import envSchema from 'env-schema';
 
-import { diContainer } from 'fastify-awilix/lib/classic';
-import { asClass, asValue } from 'awilix';
+const schema = Type.Strict(
+  Type.Object({
+    PORT: Type.Number({ default: 3000 }),
+    development: Type.Boolean({ default: false }),
+    db_url: Type.String({ default: 'mongodb://localhost:27017/test' }),
+  }),
+);
 
-class DbConfig {
-  static async createConnection(): Promise<mongoose.Connection> {
-    return mongoose.createConnection('mongodb://localhost:27017/test');
-  }
+export type Env = Static<typeof schema>;
 
-  static async createCollection<T>(
-    connection: Promise<mongoose.Connection>,
-    collectionName: string,
-    model: mongoose.Model<T>,
-  ): Promise<mongoose.Model<T>> {
-    return (await connection).model(collectionName, model.schema);
-  }
-}
+export const resolveServerAddress = (development: boolean) =>
+  development ? undefined : '0.0.0.0';
 
-export const diInit = () => {
-  const connection = DbConfig.createConnection();
-  diContainer.register({
-    connection: asValue(connection),
-    userCollection: asValue(
-      DbConfig.createCollection(connection, 'User', UserSchema),
-    ),
-    userService: asClass(UserService).singleton(),
+export const appConfig = (): Env => {
+  dotenv.config();
+  return envSchema<Env>({
+    schema: schema,
   });
 };
