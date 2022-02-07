@@ -18,22 +18,6 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         return reply.send(findAll.error.throwable)
       }
     })
-    .get<{ Params: { code: number } }>(
-      '/code/:code',
-      {
-        schema: {
-          params: Type.Object({ code: Type.Number({ minimum: 200, maximum: 599 }) }),
-        },
-      },
-      async (request, reply) => {
-        const { code } = request.params
-        if (code >= 400) {
-          reply.badRequest('something wrong')
-        } else {
-          reply.send("It's fine.")
-        }
-      }
-    )
     .get<{ Params: { id: string } }>(
       '/user/:id',
       {

@@ -17,9 +17,9 @@ export const DbParseError = (e: unknown): BaseException => {
 
 export function validateUser(user: User): ResultAsync<User, BaseException> {
   if (user.name === 'pareto') {
-    return errAsync<User, BaseException>(DbParseError(new Error('You are not allowed to register')))
+    return errAsync(DbParseError(new Error('You are not allowed to register')))
   } else {
-    return okAsync<User, BaseException>(user)
+    return okAsync(user)
   }
 }
 
