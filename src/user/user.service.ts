@@ -6,14 +6,7 @@ import { User, UserModel } from './user.model'
 
 type UserCollection = Promise<Model<User>>
 
-export const DbParseError = (e: unknown): BaseException => {
-  const ve = e instanceof Error.ValidationError
-  if (ve) {
-    return { throwable: e, validationError: true }
-  } else {
-    return { throwable: e, validationError: false }
-  }
-}
+export const DbParseError = (e: unknown): BaseException => ({ throwable: e, validationError: e instanceof Error.ValidationError })
 
 export function validateUser(user: User): ResultAsync<User, BaseException> {
   if (user.name === 'pareto') {

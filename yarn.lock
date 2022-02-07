@@ -1508,11 +1508,6 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dataclass@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/dataclass/-/dataclass-2.0.0.tgz#932f583c0183a25b58d17d83ba7417e39804d056"
-  integrity sha512-XbxboeVjIS4TFtoNan/Hnjifda6zKYN4u5gJzK1qFBEgmB3Dyf2sGYvv5GbbO62fY7JjPe+PVbGEwgiiAGclWA==
-
 date-fns@^2.16.1:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
@@ -4746,11 +4741,6 @@ typedarray-to-buffer@^3.1.5:
   integrity sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
   dependencies:
     is-typedarray "^1.0.0"
-
-typescript-pattern-matching@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/typescript-pattern-matching/-/typescript-pattern-matching-1.0.1.tgz#c7f839cfe42d130b3ad719a9b253206975d7fc15"
-  integrity sha512-0c9axeafSPrRM8k8jkaps5a0nMXI6HC0vBCo8cuAcS0XUaIY6OPUplGPApAFsIe4I2NltKicEKymthBi9W/Mvw==
 
 typescript@^4.5.5:
   version "4.5.5"
