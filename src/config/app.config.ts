@@ -21,4 +21,7 @@ export const appConfig = (): Env => {
   })
 }
 
-export type AppError = { message?: string; validationError: boolean; throwable: unknown }
+export interface BaseException {
+  validationError: boolean
+  throwable: unknown | undefined
+}

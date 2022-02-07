@@ -1,17 +1,22 @@
-import { AppError } from '@src/config/app.config'
-import { User, UserModel, UserModelSchema } from '@src/user/user.model'
+import { UserModel, UserModelSchema } from '@src/user/user.model'
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from 'fastify-typebox'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
+  const findServices = await fastify.diContainer.cradle.findServices()
+
   fastify
-    .setErrorHandler(async (error, req, reply) => {
+    .setErrorHandler(async (error, _, reply) => {
       console.error(error)
       reply.status(400).send(new Error(error.message))
     })
-    .get('/', async () => {
-      const findAllService = fastify.diContainer.cradle.findAllService
-      return findAllService()
+    .get('/', async (_, reply) => {
+      const findAll = await findServices.findAll()
+      if (findAll.isOk()) {
+        return findAll.value
+      } else {
+        return reply.send(findAll.error.throwable)
+      }
     })
     .get<{ Params: { code: number } }>(
       '/code/:code',
@@ -29,6 +34,23 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         }
       }
     )
+    .get<{ Params: { id: string } }>(
+      '/user:id',
+      {
+        schema: {
+          params: Type.Object({ code: Type.String() }),
+        },
+      },
+      async (request) => {
+        const { id } = request.params
+        const findById = await findServices.findById(id)
+        if (findById.isOk()) {
+          return findById.value
+        } else {
+          return findById.error.throwable
+        }
+      }
+    )
     .post<{ Body: UserModel }>(
       '/',
       {
@@ -43,19 +65,12 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       async (req, reply) => {
         const createUserService = fastify.diContainer.cradle.createUserService
         const user = req.body as UserModel
-        const result = (await createUserService(user)).match(
-          (user: User) => {
-            req.log.info('User {} created', user)
-            return 201
-          },
-          (error: AppError) => {
-            if (error.validationError) throw error.throwable
-            req.log.error({ error }, 'error on create user')
-            return 500
-          }
-        )
-
-        reply.status(result).send()
+        const createUser = await createUserService(user)
+        if (createUser.isOk()) {
+          return createUser.value
+        } else {
+          return createUser.error.throwable
+        }
       }
     )
 }

@@ -1,17 +1,25 @@
-import { AppError } from '@src/config/app.config'
+import { BaseException } from '@src/config/app.config'
 import { ObjectId } from 'mongodb'
 import { Model, Error } from 'mongoose'
-import { errAsync, ResultAsync } from 'neverthrow'
+import { errAsync, okAsync, ResultAsync } from 'neverthrow'
 import { User, UserModel } from './user.model'
 
 type UserCollection = Promise<Model<User>>
 
-const toParseError = (e: unknown): AppError => {
+export const DbParseError = (e: unknown): BaseException => {
   const ve = e instanceof Error.ValidationError
   if (ve) {
-    return { message: e.message, validationError: true, throwable: e }
+    return { throwable: e, validationError: true }
   } else {
-    return { message: 'Database operation error', validationError: false, throwable: e }
+    return { throwable: e, validationError: false }
+  }
+}
+
+export function validateUser(user: User): ResultAsync<User, BaseException> {
+  if (user.name === 'pareto') {
+    return errAsync<User, BaseException>(DbParseError(new Error('You are not allowed to register')))
+  } else {
+    return okAsync<User, BaseException>(user)
   }
 }
 
@@ -23,14 +31,27 @@ export function createUserService(userCollection: UserCollection) {
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
     }
-    // To simulate some business logic
-    if (user.name.toLowerCase() === 'pareto')
-      return errAsync({ throwable: new Error('You are not allowed to register'), validationError: true })
-    return ResultAsync.fromPromise((await userCollection).create(userDomain), toParseError)
+
+    const createUser = (user: User) =>
+      ResultAsync.fromPromise(userCollection, DbParseError)
+        .map<User>((u) => u.create(user))
+        .mapErr(DbParseError)
+
+    return (await validateUser(userDomain)).asyncAndThen<User, BaseException>(createUser)
   }
 }
 
-export function findAllService(userCollection: UserCollection) {
-  const findAll = async () => (await userCollection).find<User>({})
-  return async () => ResultAsync.fromPromise(findAll(), toParseError)
+export interface FindServices {
+  findAll(): ResultAsync<User[], BaseException>
+  findById(id: string): ResultAsync<User | null, BaseException>
+}
+
+export function findServices(userCollection: UserCollection) {
+  const findall = async () => (await userCollection).find<User>({})
+  const findById = async (id: string) => (await userCollection).findById<User>(id)
+  const services: FindServices = {
+    findAll: () => ResultAsync.fromPromise(findall(), DbParseError),
+    findById: (id: string) => ResultAsync.fromPromise(findById(id), DbParseError),
+  }
+  return async () => services
 }

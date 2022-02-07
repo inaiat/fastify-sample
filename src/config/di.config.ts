@@ -3,7 +3,7 @@ import { Cradle, diContainer } from 'fastify-awilix/lib/classic'
 import { Env } from './app.config'
 import * as mongoose from 'mongoose'
 import { User, UserSchema } from '@src/user/user.model'
-import { createUserService, findAllService } from '@src/user/user.service'
+import { createUserService, findServices } from '@src/user/user.service'
 
 export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
 declare module 'fastify-awilix' {
@@ -12,7 +12,7 @@ declare module 'fastify-awilix' {
     connection: Promise<mongoose.Connection>
     userCollection: Promise<mongoose.Model<User>>
     createUserService: ReturnType<typeof createUserService>
-    findAllService: ReturnType<typeof findAllService>
+    findServices: ReturnType<typeof findServices>
   }
 }
 
@@ -30,7 +30,7 @@ const defaultConfig: DiConfig = (env, di) => {
     connection: asValue(connection),
     userCollection: asValue(createCollection(connection, 'User', UserSchema)),
     createUserService: asFunction(createUserService),
-    findAllService: asFunction(findAllService),
+    findServices: asFunction(findServices),
   })
 }
 
