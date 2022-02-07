@@ -19,7 +19,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       }
     })
     .get<{ Params: { id: string } }>(
-      '/user/:id',
+      '/:id',
       {
         schema: {
           params: Type.Object({ id: Type.String() }),
