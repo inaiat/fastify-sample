@@ -10,12 +10,12 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       console.error(error)
       reply.status(400).send(new Error(error.message))
     })
-    .get('/', async (_, reply) => {
+    .get('/', async () => {
       const findAll = await findServices.findAll()
       if (findAll.isOk()) {
         return findAll.value
       } else {
-        return reply.send(findAll.error.throwable)
+        return findAll.error.throwable
       }
     })
     .get<{ Params: { id: string } }>(
