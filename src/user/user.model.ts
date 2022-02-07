@@ -17,7 +17,7 @@ export interface User extends UserModel {
 export const UserSchema = model<User>(
   'User',
   new Schema<User>({
-    name: { type: String, required: true, maxlength: 5 },
+    name: { type: String, required: true, maxlength: 10 },
     yearOfBirth: { type: Number, required: true, min: 1900 },
     age: { type: Number, required: true, min: 18, max: 200 },
   })

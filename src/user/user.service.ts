@@ -37,7 +37,7 @@ export function createUserService(userCollection: UserCollection) {
         .map<User>((u) => u.create(user))
         .mapErr(DbParseError)
 
-    return (await validateUser(userDomain)).asyncAndThen<User, BaseException>(createUser)
+    return validateUser(userDomain).andThen<User, BaseException>(createUser)
   }
 }
 

@@ -35,10 +35,10 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       }
     )
     .get<{ Params: { id: string } }>(
-      '/user:id',
+      '/user/:id',
       {
         schema: {
-          params: Type.Object({ code: Type.String() }),
+          params: Type.Object({ id: Type.String() }),
         },
       },
       async (request) => {
@@ -62,7 +62,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
           },
         },
       },
-      async (req, reply) => {
+      async (req) => {
         const createUserService = fastify.diContainer.cradle.createUserService
         const user = req.body as UserModel
         const createUser = await createUserService(user)
