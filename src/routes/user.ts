@@ -3,7 +3,7 @@ import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from 'fastify-typebox'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
-  const findServices = await fastify.diContainer.cradle.findServices()
+  const findServices = await fastify.diContainer.cradle.findServices
 
   fastify
     .setErrorHandler(async (error, _, reply) => {

@@ -29,8 +29,8 @@ const defaultConfig: DiConfig = (env, di) => {
     config: asValue(env),
     connection: asValue(connection),
     userCollection: asValue(createCollection(connection, 'User', UserSchema)),
-    createUserService: asFunction(createUserService),
-    findServices: asFunction(findServices),
+    createUserService: asFunction(createUserService).singleton(),
+    findServices: asFunction(findServices).singleton()
   })
 }
 

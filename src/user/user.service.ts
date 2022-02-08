@@ -1,8 +1,10 @@
 import { BaseException } from '@src/config/app.config'
+import { create } from 'domain'
 import { ObjectId } from 'mongodb'
 import { Model, Error } from 'mongoose'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
 import { User, UserModel } from './user.model'
+import { findall, findById } from './user.repository'
 
 type UserCollection = Promise<Model<User>>
 
@@ -19,8 +21,9 @@ export function validateUser(user: User): ResultAsync<User, BaseException> {
   }
 }
 
-export function createUserService(userCollection: UserCollection) {
-  return async (user: UserModel, id: ObjectId = new ObjectId()) => {
+export const createUserService =
+  (userCollection: UserCollection) =>
+  (user: UserModel, id: ObjectId = new ObjectId()) => {
     const userDomain: User = {
       _id: id,
       name: user.name,
@@ -35,19 +38,13 @@ export function createUserService(userCollection: UserCollection) {
 
     return validateUser(userDomain).andThen<User, BaseException>(createUser)
   }
-}
 
 export interface FindServices {
   findAll(): ResultAsync<User[], BaseException>
   findById(id: string): ResultAsync<User | null, BaseException>
 }
 
-export function findServices(userCollection: UserCollection) {
-  const findall = async () => (await userCollection).find<User>({})
-  const findById = async (id: string) => (await userCollection).findById<User>(id)
-  const services: FindServices = {
-    findAll: () => ResultAsync.fromPromise(findall(), DbParseError),
-    findById: (id: string) => ResultAsync.fromPromise(findById(id), DbParseError),
-  }
-  return async () => services
-}
+export const findServices = (userCollection: UserCollection): FindServices => ({
+  findAll: () => findall(userCollection),
+  findById: (id: string) => findById(userCollection, id),
+})
