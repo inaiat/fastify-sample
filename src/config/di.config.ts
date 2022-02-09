@@ -3,7 +3,7 @@ import { Cradle, diContainer } from 'fastify-awilix/lib/classic'
 import { Env } from './app.config'
 import * as mongoose from 'mongoose'
 import { User, UserSchema } from '../user/user.model'
-import { defaultUserServices } from '../user/user.service'
+import { defaultUserServices, UserServices } from '../user/user.service'
 
 export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
 declare module 'fastify-awilix' {
@@ -11,7 +11,7 @@ declare module 'fastify-awilix' {
     readonly config: Env
     readonly connection: Promise<mongoose.Connection>
     readonly userCollection: Promise<mongoose.Model<User>>
-    readonly userServices: ReturnType<typeof defaultUserServices>
+    readonly userServices: UserServices
   }
 }
 
