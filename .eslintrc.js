@@ -7,8 +7,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
     "plugin:functional/no-mutations",
-    // "plugin:functional/lite",
-    // "plugin:functional/no-exceptions"
+    "plugin:functional/stylistic",
+    "plugin:functional/no-object-orientation",
+    "plugin:functional/no-exceptions",
   ],
   rules: {
     "functional/no-method-signature": "off"

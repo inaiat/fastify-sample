@@ -1,20 +1,26 @@
 import fastify, { FastifyInstance } from 'fastify'
+import { ResultAsync } from 'neverthrow'
 import { appConfig, resolveServerAddress } from './config/app.config'
 import { startContainer } from './config/di.config'
+import { BaseException, ExceptionHandler } from './config/exception'
 import { App } from './config/fastify.config'
 import { serverOptions } from './config/logger.config'
 
-const server: FastifyInstance = fastify(serverOptions)
-server.register(App)
+const fastifyInstance: FastifyInstance = fastify(serverOptions)
+fastifyInstance.register(App)
 
 const start = async () => {
-  try {
-    server.log.info('Starting server...')
+  const server = async () => {
+    fastifyInstance.log.info('Starting server...')
     const config = appConfig()
     startContainer(config)
-    await server.listen(config.PORT, resolveServerAddress(config.development))
-  } catch (err) {
-    server.log.error(err)
+    await fastifyInstance.listen(config.PORT, resolveServerAddress(config.development))
+  }
+
+  const result = await ResultAsync.fromPromise<void, BaseException>(server(), ExceptionHandler)
+
+  if (result.isErr()) {
+    fastifyInstance.log.error(result.error.throwable)
     process.exit(1)
   }
 }
