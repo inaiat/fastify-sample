@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { Model, Error } from 'mongoose'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
-import { BaseException, DefaultExceptionHandler } from '../config/app.config'
+import { BaseException, ExceptionHandler } from '../config/exception'
 import { User, UserModel } from './user.model'
 import { createUser, findall, findById } from './user.repository'
 
@@ -15,7 +15,7 @@ export interface UserServices {
 
 export function validateUser(user: User): ResultAsync<User, BaseException> {
   if (user.name === 'pareto') {
-    return errAsync(DefaultExceptionHandler(new Error('You are not allowed to register')))
+    return errAsync(ExceptionHandler(new Error('You are not allowed to register')))
   } else {
     return okAsync(user)
   }
@@ -23,18 +23,26 @@ export function validateUser(user: User): ResultAsync<User, BaseException> {
 
 const createUserService =
   (userCollection: UserCollection) =>
-  (user: UserModel, id: ObjectId = new ObjectId()) => {
+  (user: UserModel, id: ObjectId = new ObjectId()): ResultAsync<User, BaseException> => {
     const userDomain: User = {
       _id: id,
       name: user.name,
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
     }
-    return validateUser(userDomain).andThen<User, BaseException>(createUser(userCollection))
+    return validateUser(userDomain).andThen(createUser(userCollection))
   }
+
+const userNotFound = (user: User | null): ResultAsync<User, BaseException> => {
+  if (user === null) {
+    return errAsync(ExceptionHandler(new Error('User not found')))
+  } else {
+    return okAsync(user)
+  }
+}
 
 export const defaultUserServices = (userCollection: UserCollection): UserServices => ({
   findAll: () => findall(userCollection),
-  findById: (id: string) => findById(userCollection)(id),
+  findById: (id: string) => findById(userCollection)(id).andThen(userNotFound),
   create: (user: UserModel, id?: ObjectId) => createUserService(userCollection)(user, id),
 })

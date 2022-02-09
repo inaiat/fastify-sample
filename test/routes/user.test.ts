@@ -4,7 +4,7 @@ import { instance, mock, when } from 'strong-mock'
 import { UserServices } from '../../src/user/user.service'
 import { User } from '../../src/user/user.model'
 import { okAsync } from 'neverthrow'
-import { BaseException } from '../../src/config/app.config'
+import { BaseException } from '../../src/config/exception'
 
 const findServicesMock = mock<UserServices>()
 
