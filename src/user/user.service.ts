@@ -1,27 +1,27 @@
-import { BaseException } from '@src/config/app.config'
-import { create } from 'domain'
 import { ObjectId } from 'mongodb'
 import { Model, Error } from 'mongoose'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
+import { BaseException, DefaultExceptionHandler } from '../config/app.config'
 import { User, UserModel } from './user.model'
-import { findall, findById } from './user.repository'
+import { createUser, findall, findById } from './user.repository'
 
-type UserCollection = Promise<Model<User>>
+export type UserCollection = Promise<Model<User>>
 
-export const DbParseError = (e: unknown): BaseException => ({
-  throwable: e,
-  validationError: e instanceof Error.ValidationError,
-})
+export interface UserServices {
+  findAll(): ResultAsync<User[], BaseException>
+  findById(id: string): ResultAsync<User | null, BaseException>
+  create(user: UserModel, id?: ObjectId): ResultAsync<User, BaseException>
+}
 
 export function validateUser(user: User): ResultAsync<User, BaseException> {
   if (user.name === 'pareto') {
-    return errAsync(DbParseError(new Error('You are not allowed to register')))
+    return errAsync(DefaultExceptionHandler(new Error('You are not allowed to register')))
   } else {
     return okAsync(user)
   }
 }
 
-export const createUserService =
+const createUserService =
   (userCollection: UserCollection) =>
   (user: UserModel, id: ObjectId = new ObjectId()) => {
     const userDomain: User = {
@@ -30,21 +30,11 @@ export const createUserService =
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
     }
-
-    const createUser = (user: User) =>
-      ResultAsync.fromPromise(userCollection, DbParseError)
-        .map<User>((u) => u.create(user))
-        .mapErr(DbParseError)
-
-    return validateUser(userDomain).andThen<User, BaseException>(createUser)
+    return validateUser(userDomain).andThen<User, BaseException>(createUser(userCollection))
   }
 
-export interface FindServices {
-  findAll(): ResultAsync<User[], BaseException>
-  findById(id: string): ResultAsync<User | null, BaseException>
-}
-
-export const findServices = (userCollection: UserCollection): FindServices => ({
+export const defaultUserServices = (userCollection: UserCollection): UserServices => ({
   findAll: () => findall(userCollection),
-  findById: (id: string) => findById(userCollection, id),
+  findById: (id: string) => findById(userCollection)(id),
+  create: (user: UserModel, id?: ObjectId) => createUserService(userCollection)(user, id),
 })

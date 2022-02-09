@@ -25,3 +25,8 @@ export interface BaseException {
   validationError: boolean
   throwable: unknown | undefined
 }
+
+export const DefaultExceptionHandler = (throwable: unknown, validationError = false): BaseException => ({
+  throwable,
+  validationError,
+})

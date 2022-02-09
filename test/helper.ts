@@ -1,31 +1,20 @@
-import { DiConfig } from 'config/di.config'
-import Fastify, { FastifyPluginAsync } from 'fastify'
-import AutoLoad from 'fastify-autoload'
-import { diContainer } from 'fastify-awilix/lib/classic'
+import Fastify from 'fastify'
 import fp from 'fastify-plugin'
-import { join } from 'path'
+import { diContainer } from 'fastify-awilix/lib/classic'
+import { DiConfig } from '../src/config/di.config'
+import { App } from '../src/config/fastify.config'
 
 async function config() {
   return {}
 }
 
-function build(diConfig: DiConfig, route: FastifyPluginAsync) {
+function build(diConfig: DiConfig) {
   const app = Fastify()
 
-  diConfig({ development: true, PORT: 3000 }, diContainer)
+  diConfig({ development: true, db_url: 'mongodb', PORT: 3000 }, diContainer)
 
   beforeAll(async () => {
-    void app.register(
-      fp(async (fastify, opts): Promise<void> => {
-        fastify.register(AutoLoad, {
-          dir: join(__dirname, '../src/config/plugins'),
-          options: opts,
-        })
-
-        fastify.register(route)
-      }),
-      await config()
-    )
+    void app.register(fp(App), await config())
     await app.ready()
   })
 

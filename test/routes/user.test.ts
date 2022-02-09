@@ -1,11 +1,32 @@
-import { test } from 'tap'
+import { asValue } from 'awilix'
 import { build } from '../helper'
+import { instance, mock, when } from 'strong-mock'
+import { UserServices } from '../../src/user/user.service'
+import { User } from '../../src/user/user.model'
+import { okAsync } from 'neverthrow'
+import { BaseException } from '../../src/config/app.config'
 
-test('default root route', async (t) => {
-  const app = await build(t)
+const findServicesMock = mock<UserServices>()
 
-  const res = await app.inject({
-    url: '/',
+describe('test user endopint', () => {
+  const app = build((env, di) => {
+    di.register({
+      config: asValue(env),
+      userServices: asValue(instance(findServicesMock)),
+    })
   })
-  t.same(JSON.parse(res.payload), { root: true })
+
+  test('find find all', async () => {
+    const findAllResult = okAsync<User[], BaseException>([
+      { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
+      { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
+    ])
+
+    when(findServicesMock.findAll()).thenReturn(findAllResult)
+
+    const res = await app.inject({
+      url: '/',
+    })
+    expect(JSON.parse(res.payload)).toEqual((await findAllResult)._unsafeUnwrap())
+  })
 })

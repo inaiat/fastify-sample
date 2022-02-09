@@ -1,9 +1,9 @@
-import { UserModel, UserModelSchema } from '@src/user/user.model'
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from 'fastify-typebox'
+import { UserModel, UserModelSchema } from '../user/user.model'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
-  const findServices = await fastify.diContainer.cradle.findServices
+  const userServices = fastify.diContainer.cradle.userServices
 
   fastify
     .setErrorHandler(async (error, _, reply) => {
@@ -11,7 +11,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       reply.status(400).send(new Error(error.message))
     })
     .get('/', async () => {
-      const findAll = await findServices.findAll()
+      const findAll = await userServices.findAll()
       if (findAll.isOk()) {
         return findAll.value
       } else {
@@ -27,7 +27,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       },
       async (request) => {
         const { id } = request.params
-        const findById = await findServices.findById(id)
+        const findById = await userServices.findById(id)
         if (findById.isOk()) {
           return findById.value
         } else {
@@ -47,9 +47,8 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         },
       },
       async (req) => {
-        const createUserService = fastify.diContainer.cradle.createUserService
         const user = req.body as UserModel
-        const createUser = await createUserService(user)
+        const createUser = await userServices.create(user)
         if (createUser.isOk()) {
           return createUser.value
         } else {
