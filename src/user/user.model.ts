@@ -10,8 +10,8 @@ export const UserModelSchema = Type.Object({
 export type UserModel = Static<typeof UserModelSchema>
 
 export interface User extends UserModel {
-  _id?: ObjectId
-  yearOfBirth: number
+  readonly _id?: ObjectId
+  readonly yearOfBirth: number
 }
 
 export const UserSchema = model<User>(

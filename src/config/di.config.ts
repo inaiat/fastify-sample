@@ -8,10 +8,10 @@ import { defaultUserServices } from '../user/user.service'
 export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
 declare module 'fastify-awilix' {
   interface Cradle {
-    config: Env
-    connection: Promise<mongoose.Connection>
-    userCollection: Promise<mongoose.Model<User>>
-    userServices: ReturnType<typeof defaultUserServices>
+    readonly config: Env
+    readonly connection: Promise<mongoose.Connection>
+    readonly userCollection: Promise<mongoose.Model<User>>
+    readonly userServices: ReturnType<typeof defaultUserServices>
   }
 }
 
@@ -30,8 +30,7 @@ const defaultConfig: DiConfig = (env, di) => {
     userCollection: asValue(createCollection(connection, 'User', UserSchema)),
     userServices: asFunction(defaultUserServices).singleton(),
   })
+  return di.cradle
 }
 
-export const startContainer = (env: Env): void => {
-  defaultConfig(env, diContainer)
-}
+export const startContainer = (env: Env): void => defaultConfig(env, diContainer)

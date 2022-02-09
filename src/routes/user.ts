@@ -18,7 +18,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         return findAll.error.throwable
       }
     })
-    .get<{ Params: { id: string } }>(
+    .get<{ readonly Params: { readonly id: string } }>(
       '/:id',
       {
         schema: {
@@ -35,7 +35,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         }
       }
     )
-    .post<{ Body: UserModel }>(
+    .post<{ readonly Body: UserModel }>(
       '/',
       {
         schema: {

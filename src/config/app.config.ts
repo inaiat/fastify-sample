@@ -22,8 +22,8 @@ export const appConfig = (): Env => {
 }
 
 export interface BaseException {
-  validationError: boolean
-  throwable: unknown | undefined
+  readonly validationError: boolean
+  readonly throwable: unknown | undefined
 }
 
 export const DefaultExceptionHandler = (throwable: unknown, validationError = false): BaseException => ({

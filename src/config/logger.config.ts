@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 const xRequestId = 'x-request-id'
 
 export type CustomServerOptions = {
-  logger: LoggerOptions
+  readonly logger: LoggerOptions
 } & Partial<FastifyServerOptions>
 
 const formatter = {
