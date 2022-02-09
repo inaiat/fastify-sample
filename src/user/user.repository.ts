@@ -9,7 +9,7 @@ const wrapCollection = (userCollection: UserCollection) => ResultAsync.fromPromi
 
 export const findall = (userCollection: UserCollection) =>
   wrapCollection(userCollection)
-    .map<User[]>(async (c) => c.find({}))
+    .map<readonly User[]>(async (c) => c.find({}))
     .mapErr(ExceptionHandler)
 
 export const findById = (userCollection: UserCollection) => (id: string) =>

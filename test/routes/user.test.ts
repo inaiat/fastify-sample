@@ -17,7 +17,7 @@ describe('test user endopint', () => {
   })
 
   test('find find all', async () => {
-    const findAllResult = okAsync<User[], BaseException>([
+    const findAllResult = okAsync<readonly User[], BaseException>([
       { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
       { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
     ])

@@ -8,7 +8,7 @@ import { createUser, findall, findById } from './user.repository'
 export type UserCollection = Promise<Model<User>>
 
 export interface UserServices {
-  findAll(): ResultAsync<User[], BaseException>
+  findAll(): ResultAsync<readonly User[], BaseException>
   findById(id: string): ResultAsync<User | null, BaseException>
   create(user: UserModel, id?: ObjectId): ResultAsync<User, BaseException>
 }
