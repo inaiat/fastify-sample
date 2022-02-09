@@ -2,7 +2,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import { ResultAsync } from 'neverthrow'
 import { appConfig, resolveServerAddress } from './config/app.config'
 import { startContainer } from './config/di.config'
-import { BaseException, ExceptionHandler } from './config/exception'
+import { ExceptionHandler } from './config/exception'
 import { App } from './config/fastify.config'
 import { serverOptions } from './config/logger.config'
 
@@ -17,7 +17,7 @@ const start = async () => {
     await fastifyInstance.listen(config.PORT, resolveServerAddress(config.development))
   }
 
-  const result = await ResultAsync.fromPromise<void, BaseException>(server(), ExceptionHandler)
+  const result = await ResultAsync.fromPromise(server(), ExceptionHandler)
 
   if (result.isErr()) {
     fastifyInstance.log.error(result.error.throwable)
