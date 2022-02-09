@@ -1,6 +1,9 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
+  parserOptions: {
+    "project": "./tsconfig.json"
+  },
   plugins: ["@typescript-eslint", "functional"],
   extends: [
     "eslint:recommended",
@@ -10,8 +13,10 @@ module.exports = {
     "plugin:functional/stylistic",
     "plugin:functional/no-object-orientation",
     "plugin:functional/no-exceptions",
+    "plugin:functional/external-recommended",
   ],
   rules: {
-    "functional/no-method-signature": "off"
+    "functional/no-method-signature": "off",
+    "@typescript-eslint/prefer-readonly-parameter-types": "off"
   }
 };

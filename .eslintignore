@@ -2,3 +2,5 @@
 node_modules
 dist
 jest.config.js
+coverage
+test
