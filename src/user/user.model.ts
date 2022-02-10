@@ -1,11 +1,15 @@
 import { ObjectId } from 'mongodb'
 import { model, Schema } from 'mongoose'
 import { Static, Type } from '@sinclair/typebox'
+import { ResultAsync } from 'neverthrow'
+import { BaseError } from '../config/error.handler'
 
 export const UserModelSchema = Type.Object({
   name: Type.String({ maxLength: 100 }),
   age: Type.Number({ maximum: 200, minimum: 18 }),
 })
+
+export type ResultUser = ResultAsync<User, BaseError>
 
 export type UserModel = Static<typeof UserModelSchema>
 

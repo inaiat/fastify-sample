@@ -4,7 +4,7 @@ import { instance, mock, when } from 'strong-mock'
 import { UserServices } from '../../src/user/user.service'
 import { User } from '../../src/user/user.model'
 import { okAsync } from 'neverthrow'
-import { BaseException } from '../../src/config/exception'
+import { BaseError } from '../../src/config/error.handler'
 
 const findServicesMock = mock<UserServices>()
 
@@ -17,7 +17,7 @@ describe('test user endopint', () => {
   })
 
   test('find find all', async () => {
-    const findAllResult = okAsync<readonly User[], BaseException>([
+    const findAllResult = okAsync<readonly User[], BaseError>([
       { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
       { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
     ])

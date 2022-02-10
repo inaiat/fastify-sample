@@ -2,7 +2,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import { ResultAsync } from 'neverthrow'
 import { appConfig, resolveServerAddress } from './config/app.config'
 import { startContainer } from './config/di.config'
-import { ExceptionHandler } from './config/exception'
+import { ExceptionHandler } from './config/error.handler'
 import { App } from './config/fastify.config'
 import { serverOptions } from './config/logger.config'
 

@@ -1,6 +1,6 @@
 import { Model } from 'mongoose'
 import { ResultAsync } from 'neverthrow'
-import { ExceptionHandler } from '../config/exception'
+import { ExceptionHandler } from '../config/error.handler'
 import { User } from './user.model'
 
 type UserCollection = Promise<Model<User>>
