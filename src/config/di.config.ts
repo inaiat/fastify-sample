@@ -4,29 +4,31 @@ import { Env } from './app.config'
 import * as mongoose from 'mongoose'
 import { User, UserSchema } from '../user/user.model'
 import { defaultUserServices, UserServices } from '../user/user.service'
+import { defaultUserRepository, UserRepository } from '../user/user.repository'
 
 export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
 declare module 'fastify-awilix' {
   interface Cradle {
     readonly config: Env
-    readonly connection: Promise<mongoose.Connection>
-    readonly userCollection: Promise<mongoose.Model<User>>
+    readonly connection: mongoose.Connection
+    readonly userRepository: UserRepository
+    readonly userCollection: mongoose.Model<User>
     readonly userServices: UserServices
   }
 }
 
-const createConnection = async (dbUrl: string) => mongoose.createConnection(dbUrl)
-const createCollection = async <T>(
-  connection: Promise<mongoose.Connection>,
-  colName: string,
+const createCollection = <T>(
+  connection: mongoose.Connection,
+  collectionName: string,
   model: mongoose.Model<T>
-): Promise<mongoose.Model<T>> => (await connection).model(colName, model.schema)
+): mongoose.Model<T> => connection.model(collectionName, model.schema)
 
 const defaultConfig: DiConfig = (env, di) => {
-  const connection = createConnection(env.db_url)
+  const connection = mongoose.createConnection(env.db_url)
   di.register({
     config: asValue(env),
     connection: asValue(connection),
+    userRepository: asFunction(defaultUserRepository).singleton(),
     userCollection: asValue(createCollection(connection, 'User', UserSchema)),
     userServices: asFunction(defaultUserServices).singleton(),
   })

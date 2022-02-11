@@ -1,23 +1,16 @@
 import { Model } from 'mongoose'
-import { ResultAsync } from 'neverthrow'
-import { ExceptionHandler } from '../config/error.handler'
+import { fromPromise } from 'neverthrow'
+import { BaseError, ExceptionHandler } from '../config/error.handler'
 import { User } from './user.model'
 
-type UserCollection = Promise<Model<User>>
+type UserCollection = Model<User>
 
-const wrapCollection = (userCollection: UserCollection) => ResultAsync.fromPromise(userCollection, ExceptionHandler)
+export type UserRepository = ReturnType<typeof defaultUserRepository>
 
-export const findall = (userCollection: UserCollection) =>
-  wrapCollection(userCollection)
-    .map<readonly User[]>(async (c) => c.find({}))
-    .mapErr(ExceptionHandler)
-
-export const findById = (userCollection: UserCollection) => (id: string) =>
-  wrapCollection(userCollection)
-    .map<User | null>(async (c) => c.findById<User>(id))
-    .mapErr(ExceptionHandler)
-
-export const createUser = (userCollection: UserCollection) => (user: User) =>
-  wrapCollection(userCollection)
-    .map<User>((u) => u.create(user))
-    .mapErr(ExceptionHandler)
+export const defaultUserRepository = (userCollection: UserCollection) => ({
+  findall: () => fromPromise<readonly User[], BaseError>(userCollection.find({}).exec(), ExceptionHandler),
+  findByName: (name: string) =>
+    fromPromise<User | null, BaseError>(userCollection.findOne({ name }).exec(), ExceptionHandler),
+  findById: (id: string) => fromPromise<User | null, BaseError>(userCollection.findById(id).exec(), ExceptionHandler),
+  createUser: (user: User) => fromPromise<User, BaseError>(userCollection.create(user), ExceptionHandler),
+})

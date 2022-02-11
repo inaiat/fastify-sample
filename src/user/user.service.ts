@@ -3,15 +3,11 @@ import { Model, Error } from 'mongoose'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
 import { BaseError, ExceptionHandler } from '../config/error.handler'
 import { ResultUser, User, UserModel } from './user.model'
-import { createUser, findall, findById } from './user.repository'
+import { UserRepository } from './user.repository'
 
 export type UserCollection = Promise<Model<User>>
 
-export interface UserServices {
-  findAll(): ResultAsync<readonly User[], BaseError>
-  findById(id: string): ResultAsync<User | null, BaseError>
-  create(user: UserModel, id?: ObjectId): ResultUser
-}
+export type UserServices = ReturnType<typeof defaultUserServices>
 
 const validateUser = (user: User): ResultUser => {
   if (user.name === 'pareto') {
@@ -22,7 +18,7 @@ const validateUser = (user: User): ResultUser => {
 }
 
 const createUserService =
-  (userCollection: UserCollection) =>
+  (createUserFn: (user: User) => ResultAsync<User, BaseError>) =>
   (user: UserModel, id: ObjectId = new ObjectId()): ResultUser => {
     const userDomain: User = {
       _id: id,
@@ -30,7 +26,7 @@ const createUserService =
       age: user.age,
       yearOfBirth: new Date().getFullYear() - user.age,
     }
-    return validateUser(userDomain).andThen(createUser(userCollection))
+    return validateUser(userDomain).andThen(createUserFn)
   }
 
 const userNotFound = (user: User | null): ResultUser => {
@@ -41,8 +37,8 @@ const userNotFound = (user: User | null): ResultUser => {
   }
 }
 
-export const defaultUserServices = (userCollection: UserCollection): UserServices => ({
-  findAll: () => findall(userCollection),
-  findById: (id: string) => findById(userCollection)(id).andThen(userNotFound),
-  create: (user: UserModel, id?: ObjectId) => createUserService(userCollection)(user, id),
+export const defaultUserServices = (userRepository: UserRepository) => ({
+  findAll: userRepository.findall,
+  findById: (id: string) => userRepository.findById(id).andThen(userNotFound),
+  create: (user: UserModel, id?: ObjectId) => createUserService(userRepository.createUser)(user, id),
 })
