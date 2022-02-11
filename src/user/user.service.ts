@@ -1,11 +1,8 @@
 import { ObjectId } from 'mongodb'
-import { Model, Error } from 'mongoose'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
 import { BaseError, ExceptionHandler } from '../config/error.handler'
 import { ResultUser, User, UserModel } from './user.model'
 import { UserRepository } from './user.repository'
-
-export type UserCollection = Promise<Model<User>>
 
 export type UserServices = ReturnType<typeof defaultUserServices>
 
