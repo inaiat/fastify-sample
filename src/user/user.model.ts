@@ -1,28 +1,23 @@
 import { ObjectId } from 'mongodb'
-import { model, Schema } from 'mongoose'
+import { types, schema } from 'papr'
 import { Static, Type } from '@sinclair/typebox'
-import { ResultAsync } from 'neverthrow'
-import { BaseError } from '../config/error.handler'
 
-export const UserModelSchema = Type.Object({
+export const UserDtoSchema = Type.Object({
   name: Type.String({ maxLength: 100 }),
   age: Type.Number({ maximum: 200, minimum: 18 }),
 })
 
-export type ResultUser = ResultAsync<User, BaseError>
+export type UserDto = Static<typeof UserDtoSchema>
 
-export type UserModel = Static<typeof UserModelSchema>
-
-export interface User extends UserModel {
+export interface User extends UserDto {
   readonly _id?: ObjectId
   readonly yearOfBirth: number
 }
 
-export const UserSchema = model<User>(
-  'User',
-  new Schema<User>({
-    name: { type: String, required: true, maxlength: 10 },
-    yearOfBirth: { type: Number, required: true, min: 1900 },
-    age: { type: Number, required: true, min: 18, max: 200 },
-  })
-)
+export const userSchema = schema({
+  name: types.string({ required: true, maxLength: 10 }),
+  yearOfBirth: types.number({ required: true, minimum: 1900 }),
+  age: types.number({ required: true, minimum: 18, maximum: 200 }),
+})
+
+export type UserDocument = typeof userSchema[0]

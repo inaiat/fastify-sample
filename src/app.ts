@@ -13,7 +13,7 @@ const start = async () => {
   const server = async () => {
     fastifyInstance.log.info('Starting server...')
     const config = appConfig()
-    startContainer(config)
+    await startContainer(config)
     await fastifyInstance.listen(config.PORT, resolveServerAddress(config.development))
   }
 

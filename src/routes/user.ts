@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from 'fastify-typebox'
 import { replyResult } from '../config/fastify.config'
-import { UserModel, UserModelSchema } from '../user/user.model'
+import { UserDto, UserDtoSchema } from '../user/user.model'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const userServices = fastify.diContainer.cradle.userServices
@@ -24,19 +24,19 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
         return replyResult(await userServices.findById(id))
       }
     )
-    .post<{ readonly Body: UserModel }>(
+    .post<{ readonly Body: UserDto }>(
       '/',
       {
         schema: {
-          body: UserModelSchema,
+          body: UserDtoSchema,
           response: {
-            200: UserModelSchema,
+            200: UserDtoSchema,
             500: {},
           },
         },
       },
       async (req) => {
-        const user = req.body as UserModel
+        const user = req.body as UserDto
         return replyResult(await userServices.create(user))
       }
     )
