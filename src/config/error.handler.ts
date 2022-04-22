@@ -1,3 +1,6 @@
+import { MongoServerError } from 'mongodb'
+import { logger } from './logger.config'
+
 export interface BaseError {
   readonly validationError: boolean
   readonly throwable: unknown | undefined
@@ -7,3 +10,13 @@ export const ExceptionHandler = (throwable: unknown, validationError = false): B
   throwable,
   validationError,
 })
+
+export const mongoExceptionHandler = (throwable: unknown): BaseError => {
+  if (throwable instanceof MongoServerError && throwable.code === 121) {
+    logger.error(throwable?.errInfo, 'Mongo validation error')
+    return { validationError: true, throwable: new Error(throwable.message) }
+  } else {
+    logger.error(throwable, 'Mongo error')
+    return { validationError: false, throwable }
+  }
+}

@@ -1,5 +1,4 @@
 import { Static, Type } from '@sinclair/typebox'
-import * as dotenv from 'dotenv'
 import envSchema from 'env-schema'
 
 const schema = Type.Strict(
@@ -15,8 +14,8 @@ export type Env = Static<typeof schema>
 export const resolveServerAddress = (development: boolean) => (development ? undefined : '0.0.0.0')
 
 export const appConfig = (): Env => {
-  dotenv.config()
   return envSchema<Env>({
+    dotenv: true,
     schema: schema,
   })
 }

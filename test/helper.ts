@@ -3,6 +3,7 @@ import fp from 'fastify-plugin'
 import { diContainer } from 'fastify-awilix/lib/classic'
 import { DiConfig } from '../src/config/di.config'
 import { App } from '../src/config/fastify.config'
+import { mock } from 'strong-mock'
 
 async function config() {
   return {}
@@ -11,7 +12,7 @@ async function config() {
 function build(diConfig: DiConfig) {
   const app = Fastify()
 
-  diConfig({ development: true, db_url: 'mongodb', PORT: 3000 }, diContainer)
+  diConfig(mock(), diContainer)
 
   beforeAll(async () => {
     void app.register(fp(App), await config())
