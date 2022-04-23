@@ -4,7 +4,7 @@ import { userSchema } from '../user/user.model'
 
 export type MongoConfig = ReturnType<typeof defaultMongoConfig>
 
-export const defaultMongoConfig = async (dbUrl: string) => {
+export const defaultMongoConfig = async (dbUrl: string, dbName: string) => {
   const papr = new Papr()
 
   const client = await MongoClient.connect(dbUrl)

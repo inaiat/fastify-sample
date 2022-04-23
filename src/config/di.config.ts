@@ -1,13 +1,12 @@
 import { asFunction, asValue, AwilixContainer } from 'awilix'
-import { Cradle, diContainer } from 'fastify-awilix/lib/classic'
 import { Env } from './app.config'
 import { defaultUserServices, UserServices } from '../user/user.service'
 import { defaultUserRepository, UserCollection, UserRepository } from '../user/user.repository'
 import { MongoClient } from 'mongodb'
 import { defaultMongoConfig } from './mongo.config'
+import { Cradle, diContainer } from './plugins/fastify-awilix'
 
-export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
-declare module 'fastify-awilix' {
+declare module './plugins/fastify-awilix' {
   interface Cradle {
     readonly config: Env
     readonly connection: MongoClient
@@ -17,8 +16,10 @@ declare module 'fastify-awilix' {
   }
 }
 
+export type DiConfig = (env: Env, di: AwilixContainer<Cradle>) => void
+
 const defaultConfig: DiConfig = async (env, di) => {
-  const connection = await defaultMongoConfig(env.db_url)
+  const connection = await defaultMongoConfig(env.DB_URL, env.DB_NAME)
 
   di.register({
     config: asValue(env),

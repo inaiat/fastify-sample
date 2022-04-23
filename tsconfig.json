@@ -4,7 +4,7 @@
     "declaration": true,
     "allowJs": true,
     "checkJs": false,
-    "outDir": "dist"
+    "outDir": "dist",
   },
   "include": ["src/**/*.ts"]
 }

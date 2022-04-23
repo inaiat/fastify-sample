@@ -1,6 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { ResultAsync } from 'neverthrow'
-import { appConfig, resolveServerAddress } from './config/app.config'
+import { appConfig } from './config/app.config'
 import { startContainer } from './config/di.config'
 import { ExceptionHandler } from './config/error.handler'
 import { App } from './config/fastify.config'
@@ -14,7 +14,7 @@ const start = async () => {
     fastifyInstance.log.info('Starting server...')
     const config = appConfig()
     await startContainer(config)
-    await fastifyInstance.listen(config.PORT, resolveServerAddress(config.development))
+    await fastifyInstance.listen(config.PORT, config.development ? '127.0.0.1' : '0.0.0.0')
   }
 
   const result = await ResultAsync.fromPromise(server(), ExceptionHandler)
