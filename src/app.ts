@@ -1,12 +1,13 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { ResultAsync } from 'neverthrow'
+import { join } from 'path'
 import { appConfig } from './config/app.config'
 import { ExceptionHandler } from './config/error.handler'
 import { App } from './config/fastify.config'
 import { serverOptions } from './config/logger.config'
 
 const fastifyInstance: FastifyInstance = fastify(serverOptions)
-fastifyInstance.register(App)
+fastifyInstance.register(App, { dir: join(__dirname, './config/plugins') })
 
 const start = async () => {
   const server = async () => {
