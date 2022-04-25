@@ -1,18 +1,20 @@
+import { NameAndRegistrationPair } from 'awilix'
 import Fastify from 'fastify'
+import { AutoloadPluginOptions } from 'fastify-autoload'
+import { Cradle, diContainer, fastifyAwilixPlugin } from 'fastify-awilix/lib/classic'
 import fp from 'fastify-plugin'
-import { DiConfig } from '../src/config/di.config'
 import { App } from '../src/config/fastify.config'
-import { mock } from 'strong-mock'
-import { diContainer } from '../src/config/plugins/fastify-awilix'
 
-async function config() {
-  return {}
+async function config() : Promise<AutoloadPluginOptions> {
+  return { dir: "doesnt matter", ignorePattern: /di\.config/ }
 }
 
-function build(diConfig: DiConfig) {
+function build(diConfig: NameAndRegistrationPair<Cradle>) {
   const app = Fastify()
 
-  diConfig(mock(), diContainer)
+  app.register(fastifyAwilixPlugin, { disposeOnClose: true,
+    disposeOnResponse: false })
+  diContainer.register(diConfig)
 
   beforeAll(async () => {
     void app.register(fp(App), await config())

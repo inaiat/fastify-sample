@@ -1,12 +1,13 @@
 import { FastifyPluginAsync } from 'fastify'
-import AutoLoad from 'fastify-autoload'
+import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload'
 import { Result } from 'neverthrow'
 import { join } from 'path'
 import { BaseError } from './error.handler'
 
-export const App: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+export const App: FastifyPluginAsync<AutoloadPluginOptions> = async (fastify, opts): Promise<void> => {
   fastify.register(AutoLoad, {
     dir: join(__dirname, './plugins'),
+    ignorePattern: opts.ignorePattern,
     options: opts,
   })
 

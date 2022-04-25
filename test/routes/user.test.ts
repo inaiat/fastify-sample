@@ -1,28 +1,31 @@
-import { asValue } from 'awilix'
 import { build } from '../helper'
 import { instance, mock, when } from 'strong-mock'
-import { UserServices } from '../../src/user/user.service'
+import { defaultUserServices } from '../../src/user/user.service'
 import { User } from '../../src/user/user.model'
 import { okAsync } from 'neverthrow'
 import { BaseError } from '../../src/config/error.handler'
+import { asFunction, asValue } from 'awilix'
+import { UserRepository } from '../../src/user/user.repository'
 
-const findServicesMock = mock<UserServices>()
+const userRepository = mock<UserRepository>()
 
-describe('test user endopint', () => {
-  const app = build((env, di) => {
-    di.register({
-      config: asValue(env),
-      userServices: asValue(instance(findServicesMock)),
-    })
-  })
+describe('test user endopint', () => {  
 
-  test('find find all', async () => {
+  const app = build({
+    config: mock(),
+    userCollection: asValue(instance(mock())),
+    userRepository: asValue(instance(userRepository)),
+    userServices: asFunction(defaultUserServices)
+  });
+  
+  test('find all', async () => {    
+
     const findAllResult = okAsync<readonly User[], BaseError>([
       { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
       { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
     ])
 
-    when(findServicesMock.findAll()).thenReturn(findAllResult)
+    when(userRepository.findall()).thenReturn(findAllResult)
 
     const res = await app.inject({
       url: '/',

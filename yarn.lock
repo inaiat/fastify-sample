@@ -1773,6 +1773,13 @@ fastify-autoload@3.12.0:
     pkg-up "^3.1.0"
     semver "^7.3.5"
 
+fastify-awilix@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/fastify-awilix/-/fastify-awilix-1.2.1.tgz#66e96578df1d51afec67fc28f490e3ebaf85250f"
+  integrity sha512-Wej5qsrS1/Aefei6V1QUZq6NEsVQ+GclGvr8AduoI3T2x/lWMRE3SU/2eLqNlvbi11HCMugn/ZOKnqKg6EbrVg==
+  dependencies:
+    fastify-plugin "^3.0.0"
+
 fastify-error@^0.3.0:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/fastify-error/-/fastify-error-0.3.1.tgz#8eb993e15e3cf57f0357fc452af9290f1c1278d2"

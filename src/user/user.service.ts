@@ -37,7 +37,7 @@ const userNotFound = (user: User | null): ResultUser => {
 }
 
 export const defaultUserServices = (userRepository: UserRepository) => ({
-  findAll: userRepository.findall,
+  findAll: () => userRepository.findall(),
   findById: (id: string) => userRepository.findById(id).andThen(userNotFound),
   create: (user: UserDto, id?: ObjectId) => createUserService(userRepository.createUser)(user, id),
 })

@@ -8,7 +8,7 @@ export const defaultMongoConfig = async (dbUrl: string, dbName: string) => {
   const papr = new Papr()
 
   const client = await MongoClient.connect(dbUrl)
-  papr.initialize(client.db('test'))
+  papr.initialize(client.db(dbName))
 
   async function disconnect() {
     await client.close()
