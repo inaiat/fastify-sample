@@ -6,7 +6,8 @@ import { MongoClient } from 'mongodb'
 import { defaultUserRepository, UserCollection, UserRepository } from '../../user/user.repository'
 import { defaultUserServices, UserServices } from '../../user/user.service'
 import { diContainer, fastifyAwilixPlugin } from 'fastify-awilix/lib/classic'
-import { FastifyPluginCallback } from 'fastify'
+import { FastifyPluginAsync } from 'fastify'
+import { logger } from '../logger.config'
 
 declare module 'fastify-awilix' {
   interface Cradle {
@@ -18,7 +19,7 @@ declare module 'fastify-awilix' {
   }
 }
 
-const diPlugin: FastifyPluginCallback = async (fastify, opts, done) => {
+const diPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(fastifyAwilixPlugin, { disposeOnClose: true, disposeOnResponse: false })
   const env = appConfig()
   const connection = await defaultMongoConfig(env.DB_URL, env.DB_NAME)
@@ -30,9 +31,8 @@ const diPlugin: FastifyPluginCallback = async (fastify, opts, done) => {
       userCollection: asValue(connection.value.userModel),
       userServices: asFunction(defaultUserServices).singleton(),
     })
-    done()
   } else {
-    done(connection.error.throwable as Error)
+    logger.error(connection.error, 'Error on mongo startup')
   }
 }
 

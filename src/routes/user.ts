@@ -11,6 +11,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       console.error(error)
       reply.status(400).send(new Error(error.message))
     })
+    .get('/health', async () => 'OK')
     .get('/', async () => replyResult(await userServices.findAll()))
     .get<{ readonly Params: { readonly id: string } }>(
       '/:id',
