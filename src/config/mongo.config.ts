@@ -15,7 +15,7 @@ const safeInitialize = fromThrowable((client: MongoClient, dbName: string) => {
 
 export const defaultMongoConfig = async (dbUrl: string, dbName: string) =>
   fromPromise(MongoClient.connect(dbUrl), exceptionHandler)
-    .andThen((c) => safeInitialize(c, dbName))
+    .andThen((client) => safeInitialize(client, dbName))
     .map((client) => ({
       papr,
       connection: client,
