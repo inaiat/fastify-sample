@@ -6,6 +6,7 @@ import { MongoClient } from 'mongodb'
 import { defaultUserRepository, UserCollection, UserRepository } from '../../user/user.repository'
 import { defaultUserServices, UserServices } from '../../user/user.service'
 import { diContainer, fastifyAwilixPlugin } from 'fastify-awilix/lib/classic'
+import { FastifyPluginCallback } from 'fastify'
 
 declare module 'fastify-awilix' {
   interface Cradle {
@@ -17,15 +18,22 @@ declare module 'fastify-awilix' {
   }
 }
 
-export default fp(async (fastify) => {
+const diPlugin: FastifyPluginCallback = async (fastify, opts, done) => {
   fastify.register(fastifyAwilixPlugin, { disposeOnClose: true, disposeOnResponse: false })
   const env = appConfig()
   const connection = await defaultMongoConfig(env.DB_URL, env.DB_NAME)
-  diContainer.register({
-    config: asValue(env),
-    connection: asValue(connection.client),
-    userRepository: asFunction(defaultUserRepository).singleton(),
-    userCollection: asValue(connection.userModel),
-    userServices: asFunction(defaultUserServices).singleton(),
-  })
-})
+  if (connection.isOk()) {
+    diContainer.register({
+      config: asValue(env),
+      connection: asValue(connection.value.connection),
+      userRepository: asFunction(defaultUserRepository).singleton(),
+      userCollection: asValue(connection.value.userModel),
+      userServices: asFunction(defaultUserServices).singleton(),
+    })
+    done()
+  } else {
+    done(connection.error.throwable as Error)
+  }
+}
+
+export default fp(diPlugin)

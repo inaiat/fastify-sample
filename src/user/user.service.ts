@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
-import { BaseError, ExceptionHandler } from '../config/error.handler'
+import { BaseError, exceptionHandler } from '../config/error.handler'
 import { User, UserDto } from './user.model'
 import { UserRepository } from './user.repository'
 
@@ -10,7 +10,7 @@ export type UserServices = ReturnType<typeof defaultUserServices>
 
 const validateUser = (user: User): ResultUser => {
   if (user.name === 'pareto') {
-    return errAsync(ExceptionHandler(new Error('You are not allowed to register')))
+    return errAsync(exceptionHandler(new Error('You are not allowed to register')))
   } else {
     return okAsync(user)
   }
@@ -30,7 +30,7 @@ const createUserService =
 
 const userNotFound = (user: User | null): ResultUser => {
   if (user === null) {
-    return errAsync(ExceptionHandler(new Error('User not found')))
+    return errAsync(exceptionHandler(new Error('User not found')))
   } else {
     return okAsync(user)
   }

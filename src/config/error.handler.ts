@@ -6,7 +6,7 @@ export interface BaseError {
   readonly throwable: unknown | undefined
 }
 
-export const ExceptionHandler = (throwable: unknown, validationError = false): BaseError => ({
+export const exceptionHandler = (throwable: unknown, validationError = false): BaseError => ({
   throwable,
   validationError,
 })

@@ -1,6 +1,7 @@
 {
   "extends": "fastify-tsconfig",
   "compilerOptions": {
+    "experimentalDecorators": true,
     "declaration": true,
     "allowJs": true,
     "checkJs": false,
