@@ -1,7 +1,7 @@
+import { Cradle, fastifyAwilixPlugin } from '@inaiat/fastify-awilix-plugin'
 import { NameAndRegistrationPair } from 'awilix'
 import Fastify from 'fastify'
 import { AutoloadPluginOptions } from 'fastify-autoload'
-import { Cradle, diContainer, fastifyAwilixPlugin } from 'fastify-awilix/lib/classic'
 import fp from 'fastify-plugin'
 import { join } from 'path'
 import { App } from '../src/config/fastify.config'
@@ -13,9 +13,8 @@ async function config() : Promise<AutoloadPluginOptions> {
 function build(diConfig: NameAndRegistrationPair<Cradle>) {
   const app = Fastify()
 
-  app.register(fastifyAwilixPlugin, { disposeOnClose: true,
-    disposeOnResponse: false })
-  diContainer.register(diConfig)
+  app.register(fastifyAwilixPlugin, { module: diConfig,
+    injectionMode: 'CLASSIC' })
 
   beforeAll(async () => {
     void app.register(fp(App), await config())

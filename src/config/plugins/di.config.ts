@@ -5,11 +5,11 @@ import { defaultMongoConfig } from '../mongo.config'
 import { MongoClient } from 'mongodb'
 import { defaultUserRepository, UserCollection, UserRepository } from '../../user/user.repository'
 import { defaultUserServices, UserServices } from '../../user/user.service'
-import { diContainer, fastifyAwilixPlugin } from 'fastify-awilix/lib/classic'
 import { FastifyPluginAsync } from 'fastify'
 import { logger } from '../logger.config'
+import { fastifyAwilixPlugin } from '@inaiat/fastify-awilix-plugin'
 
-declare module 'fastify-awilix' {
+declare module '@inaiat/fastify-awilix-plugin' {
   interface Cradle {
     readonly config: Env
     readonly connection: MongoClient
@@ -19,21 +19,22 @@ declare module 'fastify-awilix' {
   }
 }
 
-const diPlugin: FastifyPluginAsync = async (fastify) => {
-  fastify.register(fastifyAwilixPlugin, { disposeOnClose: true, disposeOnResponse: false })
+export default fp<FastifyPluginAsync>(async (fastify) => {
   const env = appConfig()
   const connection = await defaultMongoConfig(env.DB_URL, env.DB_NAME)
-  if (connection.isOk()) {
-    diContainer.register({
-      config: asValue(env),
-      connection: asValue(connection.value.connection),
-      userRepository: asFunction(defaultUserRepository).singleton(),
-      userCollection: asValue(connection.value.userModel),
-      userServices: asFunction(defaultUserServices).singleton(),
-    })
-  } else {
-    logger.error(connection.error, 'Error on mongo startup')
-  }
-}
-
-export default fp(diPlugin)
+  connection.match(
+    (v) => {
+      fastify.register(fastifyAwilixPlugin, {
+        module: {
+          config: asValue(env),
+          connection: asValue(v.connection),
+          userRepository: asFunction(defaultUserRepository).singleton(),
+          userCollection: asValue(v.userModel),
+          userServices: asFunction(defaultUserServices).singleton(),
+        },
+        injectionMode: 'CLASSIC',
+      })
+    },
+    (e) => logger.error(e, 'Error on mongo startup')
+  )
+})
