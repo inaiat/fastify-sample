@@ -21,8 +21,7 @@ declare module '@inaiat/fastify-awilix-plugin' {
 
 export default fp<FastifyPluginAsync>(async (fastify) => {
   const env = appConfig()
-  const connection = await defaultMongoConfig(env.DB_URL, env.DB_NAME)
-  connection.match(
+  ;(await defaultMongoConfig(env.DB_URL, env.DB_NAME)).match(
     (v) => {
       fastify.register(fastifyAwilixPlugin, {
         module: {

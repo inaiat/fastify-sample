@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import { fromPromise, fromThrowable, ok } from 'neverthrow'
+import { fromPromise, fromThrowable } from 'neverthrow'
 import Papr from 'papr'
 import { userSchema } from '../user/user.model'
 import { exceptionHandler } from './error.handler'
