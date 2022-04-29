@@ -26,7 +26,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       }
     )
     .post<{ readonly Body: UserDto }>(
-      '/user/',
+      '/user',
       {
         schema: {
           body: UserDtoSchema,
