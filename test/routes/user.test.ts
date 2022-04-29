@@ -28,7 +28,7 @@ describe('test user endopint', () => {
     when(userRepository.findall()).thenReturn(findAllResult)
 
     const res = await app.inject({
-      url: '/',
+      url: '/user',
     })
     expect(JSON.parse(res.payload)).toEqual((await findAllResult)._unsafeUnwrap())
   })
