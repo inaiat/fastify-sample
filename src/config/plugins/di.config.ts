@@ -19,21 +19,24 @@ declare module '@inaiat/fastify-awilix-plugin' {
   }
 }
 
-export default fp<FastifyPluginAsync>(async (fastify) => {
-  const env = appConfig()
-  ;(await defaultMongoConfig(env.DB_URL, env.DB_NAME)).match(
-    (v) => {
-      fastify.register(fastifyAwilixPlugin, {
-        module: {
-          config: asValue(env),
-          connection: asValue(v.connection),
-          userRepository: asFunction(defaultUserRepository).singleton(),
-          userCollection: asValue(v.userModel),
-          userServices: asFunction(defaultUserServices).singleton(),
-        },
-        injectionMode: 'CLASSIC',
-      })
-    },
-    (e) => logger.error(e, 'Error on mongo startup')
-  )
-})
+export default fp<FastifyPluginAsync>(
+  async (fastify) => {
+    const env = appConfig()
+    ;(await defaultMongoConfig(env.DB_URL, env.DB_NAME)).match(
+      (v) => {
+        fastify.register(fastifyAwilixPlugin, {
+          module: {
+            config: asValue(env),
+            connection: asValue(v.connection),
+            userRepository: asFunction(defaultUserRepository).singleton(),
+            userCollection: asValue(v.userModel),
+            userServices: asFunction(defaultUserServices).singleton(),
+          },
+          injectionMode: 'CLASSIC',
+        })
+      },
+      (e) => logger.error(e, 'Error on mongo startup')
+    )
+  },
+  { name: 'di.config' }
+)

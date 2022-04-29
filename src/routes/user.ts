@@ -12,9 +12,9 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       reply.status(400).send(new Error(error.message))
     })
     .get('/health', async () => 'OK')
-    .get('/', async () => replyResult(await userServices.findAll()))
+    .get('/user', async () => replyResult(await userServices.findAll()))
     .get<{ readonly Params: { readonly id: string } }>(
-      '/:id',
+      '/user/:id',
       {
         schema: {
           params: Type.Object({ id: Type.String() }),
@@ -26,7 +26,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       }
     )
     .post<{ readonly Body: UserDto }>(
-      '/',
+      '/user/',
       {
         schema: {
           body: UserDtoSchema,
