@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@inaiat/fastify-awilix-plugin": "^0.0.3",
+    "@inaiat/fastify-awilix-plugin": "0.0.11",
     "awilix": "7.0.2",
     "env-schema": "4.0.0",
     "fastify": "3.29.0",
