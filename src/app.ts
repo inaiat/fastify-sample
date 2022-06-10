@@ -1,24 +1,23 @@
-import fastify, { FastifyInstance } from 'fastify'
+import Fastify, { FastifyInstance } from 'fastify'
 import { ResultAsync } from 'neverthrow'
 import { join } from 'path'
 import { appConfig } from './config/app.config'
 import { exceptionHandler } from './config/error.handler'
-import { App } from './config/fastify.config'
-import { serverOptions } from './config/logger.config'
+import { App, serverOptions } from './config/fastify.config'
 
-const fastifyInstance: FastifyInstance = fastify(serverOptions)
-fastifyInstance.register(App, { dir: join(__dirname, './plugins') })
+const fastify: FastifyInstance = Fastify(serverOptions)
+fastify.register(App, { dir: join(__dirname, './plugins') })
 
 const start = async () => {
   const server = async () => {
-    fastifyInstance.log.info('Starting server...')
-    await fastifyInstance.listen(appConfig().PORT, appConfig().development ? '127.0.0.1' : '0.0.0.0')
+    fastify.log.info('Starting server...')
+    await fastify.listen({ port: appConfig().PORT, host: appConfig().development ? '127.0.0.1' : '0.0.0.0' })
   }
 
   const result = ResultAsync.fromPromise(server(), exceptionHandler).match(
     () => true,
     (err) => {
-      fastifyInstance.log.error(err.throwable)
+      fastify.log.error(err.throwable)
       return false
     }
   )

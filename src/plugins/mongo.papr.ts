@@ -6,7 +6,7 @@ import Papr from 'papr'
 import { userSchema } from '../user/user.model'
 import { appConfig } from '../config/app.config'
 import { exceptionHandler } from '../config/error.handler'
-import { logger } from '../config/logger.config'
+import { logger } from '../config/fastify.config'
 
 declare module 'fastify' {
   interface FastifyInstance {

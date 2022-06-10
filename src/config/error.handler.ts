@@ -1,5 +1,5 @@
 import { MongoServerError } from 'mongodb'
-import { logger } from './logger.config'
+import { logger } from './fastify.config'
 
 export interface BaseError {
   readonly validationError: boolean
