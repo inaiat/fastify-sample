@@ -1,6 +1,6 @@
 # fastify-sample
 
-Fastify sample with functional approach
+**Fastify version 4 sample with functional approach**
 
 This project is a small but feature complete application build with Fastify, native mongodb driver and papr (typesafe models for mongodb),
 and it aims to show functional approach, dependency injection and type safe programming.
