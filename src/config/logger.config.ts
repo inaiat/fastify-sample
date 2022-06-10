@@ -1,11 +1,12 @@
-import { FastifyServerOptions } from 'fastify'
-import pino, { LoggerOptions } from 'pino'
+import { FastifyBaseLogger, FastifyLoggerOptions, FastifyServerOptions } from 'fastify'
+import pino from 'pino'
 import { nanoid } from 'nanoid'
+import { ajvTypeBoxPlugin } from '@fastify/type-provider-typebox'
 
 const xRequestId = 'x-request-id'
 
 export type CustomServerOptions = {
-  readonly logger: LoggerOptions
+  readonly logger: FastifyLoggerOptions
 } & Partial<FastifyServerOptions>
 
 const formatter = {
@@ -15,6 +16,9 @@ const formatter = {
 }
 
 export const serverOptions: CustomServerOptions = {
+  ajv: {
+    plugins: [ajvTypeBoxPlugin],
+  },
   genReqId: (req) => {
     const serverReqId = req.headers[xRequestId] as string | undefined
     if (serverReqId) return serverReqId
@@ -26,4 +30,4 @@ export const serverOptions: CustomServerOptions = {
   },
 }
 
-export const logger = pino(serverOptions.logger)
+export const logger = pino(serverOptions.logger) as FastifyBaseLogger

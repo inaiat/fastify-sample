@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload'
+import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload'
 import { Result } from 'neverthrow'
 import { BaseError } from './error.handler'
 import { logger } from './logger.config'

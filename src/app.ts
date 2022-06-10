@@ -7,7 +7,7 @@ import { App } from './config/fastify.config'
 import { serverOptions } from './config/logger.config'
 
 const fastifyInstance: FastifyInstance = fastify(serverOptions)
-fastifyInstance.register(App, { dir: join(__dirname, './config/plugins') })
+fastifyInstance.register(App, { dir: join(__dirname, './plugins') })
 
 const start = async () => {
   const server = async () => {

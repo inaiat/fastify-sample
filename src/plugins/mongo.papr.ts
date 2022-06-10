@@ -3,10 +3,10 @@ import fp from 'fastify-plugin'
 import { MongoClient } from 'mongodb'
 import { fromPromise, fromThrowable } from 'neverthrow'
 import Papr from 'papr'
-import { userSchema } from '../../user/user.model'
-import { appConfig } from '../app.config'
-import { exceptionHandler } from '../error.handler'
-import { logger } from '../logger.config'
+import { userSchema } from '../user/user.model'
+import { appConfig } from '../config/app.config'
+import { exceptionHandler } from '../config/error.handler'
+import { logger } from '../config/logger.config'
 
 declare module 'fastify' {
   interface FastifyInstance {

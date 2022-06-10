@@ -16,7 +16,7 @@ describe('test user endopint', () => {
     userCollection: asValue(instance(mock())),
     userRepository: asValue(instance(userRepository)),
     userServices: asFunction(defaultUserServices)
-  });
+  }, ['user']);
   
   test('find all', async () => {    
 

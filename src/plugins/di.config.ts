@@ -1,14 +1,14 @@
 import fp from 'fastify-plugin'
-import { appConfig, Env } from '../app.config'
+import { appConfig, Env } from '../config/app.config'
 import { asFunction, asValue } from 'awilix'
 import { MongoClient } from 'mongodb'
-import { defaultUserRepository, UserCollection, UserRepository } from '../../user/user.repository'
-import { defaultUserServices, UserServices } from '../../user/user.service'
+import { defaultUserRepository, UserCollection, UserRepository } from '../user/user.repository'
+import { defaultUserServices, UserServices } from '../user/user.service'
 import { FastifyPluginAsync } from 'fastify'
 import { userModel } from './mongo.papr'
-import { FastifyAwilix } from '@inaiat/fastify-awilix-plugin'
+import { diContainer, fastifyAwilixPlugin } from '@fastify/awilix/lib/classic'
 
-declare module '@inaiat/fastify-awilix-plugin' {
+declare module '@fastify/awilix' {
   interface Cradle {
     readonly config: Env
     readonly connection: MongoClient
@@ -20,13 +20,17 @@ declare module '@inaiat/fastify-awilix-plugin' {
 
 export default fp<FastifyPluginAsync>(
   async (fastify) => {
-    const container = new FastifyAwilix(fastify, 'CLASSIC')
-    container.register({
+    void diContainer.register({
       config: asValue(appConfig()),
       connection: asValue(fastify.mongo),
       userRepository: asFunction(defaultUserRepository).singleton(),
       userCollection: asValue(userModel),
       userServices: asFunction(defaultUserServices).singleton(),
+    })
+
+    await fastify.register(fastifyAwilixPlugin, {
+      disposeOnClose: true,
+      disposeOnResponse: false,
     })
   },
   { name: 'di.config' }

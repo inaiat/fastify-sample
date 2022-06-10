@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
-import FastifySwagger from 'fastify-swagger'
+import FastifySwagger from '@fastify/swagger'
 
 export default fp<FastifyPluginAsync>(
   async (fastify): Promise<void> => {

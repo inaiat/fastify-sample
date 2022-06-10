@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
-import { Type } from 'fastify-typebox'
+import { Type } from '@sinclair/typebox'
 import { replyResult } from '../config/fastify.config'
 import { UserDto, UserDtoSchema } from '../user/user.model'
 
