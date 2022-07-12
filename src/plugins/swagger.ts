@@ -4,7 +4,7 @@ import FastifySwagger from '@fastify/swagger'
 
 export default fp<FastifyPluginAsync>(
   async (fastify): Promise<void> => {
-    fastify.register(FastifySwagger, {
+    await fastify.register(FastifySwagger, {
       exposeRoute: true,
       routePrefix: '/docs',
       openapi: {

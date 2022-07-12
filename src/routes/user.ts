@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { replyResult } from '../config/fastify.config'
-import { UserDto, UserDtoSchema } from '../user/user.model'
+import { replyResult } from '../config/fastify.config.js'
+import { UserDto, UserDtoSchema } from '../user/user.model.js'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const userServices = fastify.diContainer.cradle.userServices
@@ -9,7 +9,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
   fastify
     .setErrorHandler(async (error, _, reply) => {
       console.error(error)
-      reply.status(400).send(new Error(error.message))
+      await reply.status(400).send(new Error(error.message))
     })
     .get('/health', async () => 'OK')
     .get('/user', async () => replyResult(await userServices.findAll()))

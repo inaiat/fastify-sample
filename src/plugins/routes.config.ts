@@ -1,14 +1,17 @@
 import { FastifyPluginAsync } from 'fastify'
-import AutoLoad from '@fastify/autoload'
 import fp from 'fastify-plugin'
-import { join } from 'path/posix'
+import { join } from 'node:path/posix'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+import fastifyAutoload from '@fastify/autoload'
 
 export default fp<FastifyPluginAsync>(
   async (fastify, opts) => {
-    fastify.register(AutoLoad, {
-      dir: join(__dirname, '../routes'),
+    await fastify.register(fastifyAutoload, {
+      dir: join(dirname(fileURLToPath(import.meta.url)), '../routes'),
       options: opts,
+      forceESM: true,
     })
   },
-  { name: 'routes', dependencies: ['swagger'] }
+  { dependencies: ['swagger'] }
 )

@@ -1,6 +1,6 @@
-.eslintrc.js
+.eslintrc.cjs
 node_modules
 dist
 jest.config.js
 coverage
-test
+report

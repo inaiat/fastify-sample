@@ -1,12 +1,11 @@
 import { FastifyBaseLogger, FastifyPluginAsync } from 'fastify'
 import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload'
 import { Result } from 'neverthrow'
-import { BaseError } from './error.handler'
+import { BaseError } from './error.handler.js'
 
 import pino from 'pino'
 import { FastifyLoggerOptions, FastifyServerOptions } from 'fastify'
 import { nanoid } from 'nanoid'
-import { ajvTypeBoxPlugin } from '@fastify/type-provider-typebox'
 
 const xRequestId = 'x-request-id'
 
@@ -21,9 +20,6 @@ const formatter = {
 }
 
 export const serverOptions: CustomServerOptions = {
-  ajv: {
-    plugins: [ajvTypeBoxPlugin],
-  },
   genReqId: (req) => {
     const serverReqId = req.headers[xRequestId] as string | undefined
     if (serverReqId) return serverReqId

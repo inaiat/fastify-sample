@@ -1,7 +1,7 @@
 import { ResultAsync } from 'neverthrow'
 import { Model } from 'papr'
-import { mongoExceptionHandler } from '../config/error.handler'
-import { User, UserDocument } from './user.model'
+import { mongoExceptionHandler } from '../config/error.handler.js'
+import { User, UserDocument } from './user.model.js'
 
 export type UserCollection = Model<UserDocument, Partial<UserDocument>>
 

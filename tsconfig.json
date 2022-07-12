@@ -1,12 +1,20 @@
 {
-  "extends": "fastify-tsconfig",
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "declaration": true,
-    "allowJs": true,
-    "checkJs": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
     "outDir": "dist",
+    "baseUrl": "src",
+    "skipLibCheck": true,
+    "strict": true,
   },
-  "include": ["src/**/*.ts"]
+  "ts-node": {
+    "swc": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
-  

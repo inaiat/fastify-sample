@@ -1,12 +1,12 @@
 import fp from 'fastify-plugin'
-import { appConfig, Env } from '../config/app.config'
+import { appConfig, Env } from '../config/app.config.js'
 import { asFunction, asValue } from 'awilix'
 import { MongoClient } from 'mongodb'
-import { defaultUserRepository, UserCollection, UserRepository } from '../user/user.repository'
-import { defaultUserServices, UserServices } from '../user/user.service'
+import { defaultUserRepository, UserCollection, UserRepository } from '../user/user.repository.js'
+import { defaultUserServices, UserServices } from '../user/user.service.js'
 import { FastifyPluginAsync } from 'fastify'
-import { userModel } from './mongo.papr'
-import { diContainer, fastifyAwilixPlugin } from '@fastify/awilix/lib/classic'
+import { userModel } from './mongo.papr.js'
+import { diContainer, fastifyAwilixPlugin } from '@fastify/awilix/lib/classic/index.js'
 
 declare module '@fastify/awilix' {
   interface Cradle {

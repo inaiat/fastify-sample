@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
-import { BaseError, exceptionHandler } from '../config/error.handler'
-import { User, UserDto } from './user.model'
-import { UserRepository } from './user.repository'
+import { BaseError, exceptionHandler } from '../config/error.handler.js'
+import { User, UserDto } from './user.model.js'
+import { UserRepository } from './user.repository.js'
 
 type ResultUser = ResultAsync<User, BaseError>
 
