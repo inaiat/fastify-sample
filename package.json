@@ -24,12 +24,12 @@
     "@fastify/swagger": "^7.4.1",
     "@fastify/type-provider-typebox": "^2.1.0",
     "@fastify/awilix": "^3.0.0",
-    "@sinclair/typebox": "^0.24.17",
+    "@sinclair/typebox": "^0.24.19",
     "awilix": "7.0.3",
     "env-schema": "5.0.0",
-    "fastify": "4.2.0",
+    "fastify": "4.2.1",
     "fastify-plugin": "4.0.0",
-    "mongodb": "4.7.0",
+    "mongodb": "4.8.0",
     "nanoid": "4.0.0",
     "neverthrow": "4.4.2",
     "papr": "7.0.1"
@@ -67,5 +67,21 @@
     "nodeArguments": [
       "--loader=ts-node/esm"
     ]
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src",
+      "tsconfig.json",
+      ".env"
+    ],
+    "ext": "ts",
+    "ignore": [
+      "src/**/*.spec.ts"
+    ],
+    "exec": "ts-node --esm ./src",
+    "env": {
+      "NODE_DEBUG": 9229,
+      "NODE_ENV": "development"
+    }
   }
 }
