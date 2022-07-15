@@ -1,15 +1,14 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { UserDto, UserDtoSchema } from '../user/user.model.js'
+import { UserDto, UserDtoSchema } from '../../user/user.model.js'
 
 const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const userServices = fastify.diContainer.cradle.userServices
 
   fastify
-    .get('/health', async () => 'OK')
-    .get('/user', async (_, reply) => reply.result(await userServices.findAll()))
+    .get('/', async (_, reply) => reply.result(await userServices.findAll()))
     .get<{ readonly Params: { readonly id: string } }>(
-      '/user/:id',
+      '/:id',
       {
         schema: {
           params: Type.Object({ id: Type.String() }),
@@ -21,7 +20,7 @@ const userRoute: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<
       }
     )
     .post<{ readonly Body: UserDto }>(
-      '/user',
+      '/',
       {
         schema: {
           body: UserDtoSchema,
