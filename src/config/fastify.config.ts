@@ -1,6 +1,7 @@
 import { FastifyBaseLogger, FastifyPluginAsync } from 'fastify'
-import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload'
-
+import { fastifyAutoload } from '@fastify/autoload'
+import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import pino from 'pino'
 import { FastifyLoggerOptions, FastifyServerOptions } from 'fastify'
 import { nanoid } from 'nanoid'
@@ -29,12 +30,18 @@ export const serverOptions: CustomServerOptions = {
   },
 }
 
-export const App: FastifyPluginAsync<AutoloadPluginOptions> = async (fastify, opts) => {
-  fastify
-    .register(AutoLoad, opts)
+export const logger = pino(serverOptions.logger) as FastifyBaseLogger
+
+const pluginLoader: FastifyPluginAsync = async (fastify, opts) => {
+  void fastify
+    .register(fastifyAutoload, {
+      dir: join(dirname(fileURLToPath(import.meta.url)), '../plugins'),
+      forceESM: true,
+      options: opts,
+    })
     .after((e) =>
       e === null ? logger.info('All plugins loaded successfuly') : logger.error(e, 'Error on loading plugin(s)')
     )
 }
 
-export const logger = pino(serverOptions.logger) as FastifyBaseLogger
+export default pluginLoader
