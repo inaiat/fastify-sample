@@ -4,11 +4,11 @@ import { instance, mock, when } from 'strong-mock'
 import { defaultUserServices } from '../src/user/user.service.js'
 import { User } from '../src/user/user.model.js'
 import { okAsync } from 'neverthrow'
-import { BaseError } from '../src/config/error.handler.js'
 import { asFunction, asValue } from 'awilix'
 import { UserRepository } from '../src/user/user.repository.js'
 import { FastifyInstance } from 'fastify'
 import { ObjectId } from 'mongodb'
+import { ResultError } from '../src/plugins/error.handler.js'
 
 const userRepository = mock<UserRepository>()
 
@@ -29,7 +29,7 @@ test.beforeEach(async (t) => {
 })
 
 test('find all', async (t) => {
-  const findAllResult = okAsync<readonly User[], BaseError>([
+  const findAllResult = okAsync<readonly User[], ResultError>([
     { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
     { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
   ])

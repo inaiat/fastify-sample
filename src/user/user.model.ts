@@ -15,7 +15,7 @@ export interface User extends UserDto {
 }
 
 export const userSchema = schema({
-  name: types.string({ required: true, maxLength: 100 }),
+  name: types.string({ required: true, maxLength: 5 }),
   yearOfBirth: types.number({ required: true, minimum: 1900 }),
   age: types.number({ required: true, minimum: 18, maximum: 200 }),
 })

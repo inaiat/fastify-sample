@@ -9,6 +9,7 @@ import { serverOptions } from '../../src/config/fastify.config.js'
 import { WithId } from 'mongodb'
 import { ObjectType } from 'papr/esm/types.js'
 import { User } from '../../src/user/user.model.js'
+import errorHandlerPlugin from '../../src/plugins/error.handler.js'
 
 export type UserRepoType = WithId<ObjectType<WithId<User>>>
 
@@ -32,6 +33,7 @@ export async function build(
   scriptPattern: string[] = []
 ) {
   const app = Fastify(serverOptions)
+  void app.register(errorHandlerPlugin)
   diContainer.register(diConfig)
 
   void app.register(fastifyAwilixPlugin, {

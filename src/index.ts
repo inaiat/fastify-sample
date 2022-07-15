@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import { ResultAsync } from 'neverthrow'
 import { appConfig } from './config/app.config.js'
-import { exceptionHandler } from './config/error.handler.js'
+import { exceptionHandler } from './plugins/error.handler.js'
 import { serverOptions } from './config/fastify.config.js'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'

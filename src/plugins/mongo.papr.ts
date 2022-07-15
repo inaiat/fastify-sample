@@ -5,7 +5,7 @@ import { fromPromise, fromThrowable } from 'neverthrow'
 import Papr from 'papr'
 import { userSchema } from '../user/user.model.js'
 import { appConfig } from '../config/app.config.js'
-import { exceptionHandler } from '../config/error.handler.js'
+import { exceptionHandler } from '../plugins/error.handler.js'
 import { logger } from '../config/fastify.config.js'
 
 declare module 'fastify' {

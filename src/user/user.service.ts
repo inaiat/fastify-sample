@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
-import { BaseError, exceptionHandler } from '../config/error.handler.js'
+import { ResultError, exceptionHandler, AppStatusCode } from '../plugins/error.handler.js'
 import { User, UserDto } from './user.model.js'
 import { UserRepository } from './user.repository.js'
 
-type ResultUser = ResultAsync<User, BaseError>
+type ResultUser = ResultAsync<User, ResultError>
 
 export type UserServices = ReturnType<typeof defaultUserServices>
 
@@ -17,7 +17,7 @@ const validateUser = (user: User): ResultUser => {
 }
 
 const createUserService =
-  (createUserFn: (user: User) => ResultAsync<User, BaseError>) =>
+  (createUserFn: (user: User) => ResultAsync<User, ResultError>) =>
   (user: UserDto, id: ObjectId = new ObjectId()): ResultUser => {
     const userDomain: User = {
       _id: id,
@@ -30,7 +30,7 @@ const createUserService =
 
 const userNotFound = (user: User | null): ResultUser => {
   if (user === null) {
-    return errAsync(exceptionHandler(new Error('User not found')))
+    return errAsync(exceptionHandler('User not found', AppStatusCode.USER_NOT_FOUND))
   } else {
     return okAsync(user)
   }
