@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc",
-    "start": "node --require=./init-tracer.cjs dist",
+    "start": "node dist",
     "lint": "eslint . --fix",
     "check-push": "yarn lint && yarn jscpd && yarn tsc",
     "dev": "development=true nodemon | pino-pretty -c -i pid,hostname -S -t 'sys:standard'",
