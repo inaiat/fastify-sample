@@ -9,6 +9,8 @@ and it aims to show functional approach, dependency injection and type safe prog
 
 Useful links of libs that we use on this project:
 
-1. https://github.com/supermacro/neverthrow
-1. https://plexinc.github.io/papr/#/
-1. https://github.com/jeffijoe/awilix
+1. NeverThrow (avoid throwing exceptions) -> https://github.com/supermacro/neverthrow
+1. Papr (Typesafe schemas for mongodb ) -> https://plexinc.github.io/papr/#/
+1. Awilix (Dependency Inejection) -> https://github.com/jeffijoe/awilix
+1. Ava (Test Runner) -> https://github.com/avajs/ava
+1. Fastify -> https://github.com/fastify/fastify

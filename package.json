@@ -97,5 +97,18 @@
       "NODE_DEBUG": 9229,
       "NODE_ENV": "development"
     }
-  }
+  },
+  "keywords": [
+    "functional",
+    "fastify",
+    "neverthrow",
+    "awilix",
+    "dependency-injection",
+    "typesafe",
+    "typescript",
+    "esm",
+    "mongodb",
+    "ava",
+    "test"
+  ],
 }
