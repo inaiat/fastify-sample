@@ -61,6 +61,19 @@
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
   },
+  "jscpd": {
+    "pattern": "src/**/*.ts",
+    "reporters": [
+      "html",
+      "console",
+      "badge"
+    ],
+    "ignore": [
+      "**/__snapshots__/**"
+    ],
+    "absolute": true,
+    "gitignore": true
+  },
   "ava": {
     "extensions": {
       "ts": "module"
