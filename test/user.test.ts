@@ -55,7 +55,7 @@ test('should result status 200 on find by id', async (t) => {
   t.is(res.statusCode, 200)
 })
 
-test('should result in status 404 on find by an id that does not exist', async (t) => {
+test('should result status 404 on find by an id that does not exist', async (t) => {
   when(userRepository.findById('xyz')).thenReturn(okAsync<UserRepoType | null>(null))
 
   const res = await t.context.inject({
