@@ -39,9 +39,16 @@ const pluginLoader: FastifyPluginAsync = async (fastify, opts) => {
       forceESM: true,
       options: opts,
     })
-    .after((e) =>
-      e === null ? logger.info('All plugins loaded successfuly') : logger.error(e, 'Error on loading plugin(s)')
-    )
+    .after((e) => {
+      if (e === null) {
+        logger.info('All plugins loaded successfuly')
+      } else {
+        logger.error(e, 'Error on loading plugin(s)')
+        // If app didn't load all plugins correctly an exception must be throw and app must be break
+        // eslint-disable-next-line functional/no-throw-statement
+        throw e
+      }
+    })
 }
 
 export default pluginLoader

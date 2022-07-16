@@ -14,3 +14,16 @@ Useful links of libs that we use on this project:
 1. Awilix (Dependency Inejection) -> https://github.com/jeffijoe/awilix
 1. Ava (Test Runner) -> https://github.com/avajs/ava
 1. Fastify -> https://github.com/fastify/fastify
+
+
+How to run:
+
+```
+git clone git@github.com:inaiat/fastify-sample.git
+cd fastify-sample
+docker run -d -p 27017:27017 mongo
+yarn dev
+```
+
+If everything went well you can play here -> http://localhost:3000/docs
+

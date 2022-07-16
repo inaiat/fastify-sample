@@ -15,7 +15,7 @@ await ResultAsync.fromPromise(
   server.listen({ port: PORT, host: development ? '127.0.0.1' : '0.0.0.0' }),
   exceptionHandler
 ).match(
-  (v) => server.log.debug(v),
+  () => ({}),
   (err) => {
     server.log.error(err)
     exit(1)

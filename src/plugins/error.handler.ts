@@ -10,35 +10,25 @@ declare module 'fastify' {
   }
 }
 
-export enum AppStatusCode {
-  BAD_REQUEST = 400,
-  USER_NOT_FOUND = 404,
-}
-
 export class ResultError extends Error {
-  constructor(readonly statusCode: number, message?: string, readonly reason?: unknown) {
+  constructor(message?: string, readonly statusCode = 400, readonly reason?: unknown) {
     super(message)
   }
 }
 
-export const exceptionHandler = (
-  exception: unknown | string,
-  code: AppStatusCode = AppStatusCode.BAD_REQUEST
-): ResultError => {
+export const notFoundErrorHandler = (exception: unknown | string) => exceptionHandler(exception, 404)
+
+export const exceptionHandler = (exception: unknown | string, statusCode = 400, reason?: unknown) => {
   if (is.string(exception)) {
-    return new ResultError(code.valueOf(), exception)
+    return new ResultError(exception, statusCode, reason)
   } else {
-    return new ResultError(AppStatusCode.BAD_REQUEST, exception as string)
+    return new ResultError(exception as string, statusCode, reason)
   }
 }
 
 export const mongoExceptionHandler = (throwable: unknown): ResultError => {
   if (is.directInstanceOf(throwable, MongoServerError) && throwable.code === 121) {
-    return new ResultError(
-      AppStatusCode.BAD_REQUEST,
-      throwable.message,
-      throwable?.errInfo?.details?.schemaRulesNotSatisfied
-    )
+    return exceptionHandler(throwable.message, 400, throwable?.errInfo?.details?.schemaRulesNotSatisfied)
   } else {
     return exceptionHandler(throwable)
   }
