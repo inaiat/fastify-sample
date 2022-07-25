@@ -10,11 +10,12 @@
     "build": "rimraf dist && tsc",
     "start": "node dist",
     "lint": "eslint . --fix",
-    "check-push": "yarn lint && yarn jscpd && yarn tsc",
+    "check-push": "yarn lint && jscpd && yarn coverage && yarn make-badges && yarn tsc",
     "dev": "development=true nodemon | pino-pretty -c -i pid,hostname -S -t 'sys:standard'",
     "prepare": "husky install",
     "test": "ava",
-    "coverage": "c8 ava"
+    "coverage": "c8 ava",
+    "make-badges": "istanbul-badges-readme"
   },
   "author": "",
   "license": "ISC",
@@ -24,16 +25,16 @@
     "@fastify/sensible": "^5.1.0",
     "@fastify/swagger": "^7.4.1",
     "@fastify/type-provider-typebox": "^2.1.0",
-    "@sinclair/typebox": "^0.24.19",
+    "@sinclair/typebox": "^0.24.20",
     "@sindresorhus/is": "^5.2.0",
-    "awilix": "7.0.3",
-    "env-schema": "5.0.0",
-    "fastify": "4.2.1",
-    "fastify-plugin": "4.0.0",
-    "mongodb": "4.8.0",
-    "nanoid": "4.0.0",
-    "neverthrow": "4.4.2",
-    "papr": "7.0.1"
+    "awilix": "^7.0.3",
+    "env-schema": "^5.0.0",
+    "fastify": "^4.3.0",
+    "fastify-plugin": "^4.0.0",
+    "mongodb": "^4.8.0",
+    "nanoid": "^4.0.0",
+    "neverthrow": "^4.4.2",
+    "papr": "^7.0.1"
   },
   "devDependencies": {
     "@jscpd/badge-reporter": "^3.4.5",
@@ -44,13 +45,14 @@
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "ava": "^4.3.1",
-    "c8": "^7.11.3",
-    "eslint": "^8.19.0",
+    "c8": "^7.12.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-functional": "^4.2.1",
+    "eslint-plugin-functional": "^4.2.2",
     "eslint-plugin-neverthrow": "^1.1.4",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
+    "istanbul-badges-readme": "^1.8.2",
     "jscpd": "^3.4.5",
     "nodemon": "^2.0.19",
     "pino-pretty": "^8.1.0",
@@ -58,7 +60,7 @@
     "regenerator-runtime": "^0.13.9",
     "rimraf": "^3.0.2",
     "strong-mock": "^7.3.0",
-    "ts-node": "^10.8.2",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "jscpd": {
@@ -72,7 +74,10 @@
       "**/__snapshots__/**"
     ],
     "absolute": true,
-    "gitignore": true
+    "gitignore": true,
+    "reportersOptions": {
+      "badge": { "path": "./assets/jscpd-badge.svg" }
+    }
   },
   "ava": {
     "extensions": {
@@ -80,6 +85,11 @@
     },
     "nodeArguments": [
       "--loader=ts-node/esm"
+    ]
+  },
+  "c8": {
+    "reporter": [
+      "json-summary"
     ]
   },
   "nodemonConfig": {
