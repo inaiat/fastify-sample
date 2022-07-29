@@ -36,3 +36,4 @@ lerna-debug.log*
 .history
 .yarn
 report
+.env

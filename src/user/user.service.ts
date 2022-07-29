@@ -1,8 +1,9 @@
+import { User } from '@prisma/client/index.js'
 import { ObjectId } from 'mongodb'
 import { errAsync, okAsync, ResultAsync } from 'neverthrow'
+import { UserModel } from 'plugins/di.config.js'
 import { ResultError, exceptionHandler, notFoundErrorHandler } from '../plugins/error.handler.js'
-import { User, UserDto } from './user.model.js'
-import { UserRepository } from './user.repository.js'
+import { UserDto } from './user.model.js'
 
 type ResultUser = ResultAsync<User, ResultError>
 
@@ -16,17 +17,13 @@ const validateUser = (user: User): ResultUser => {
   }
 }
 
-const createUserService =
-  (createUserFn: (user: User) => ResultAsync<User, ResultError>) =>
-  (user: UserDto, id: ObjectId = new ObjectId()): ResultUser => {
-    const userDomain: User = {
-      _id: id,
-      name: user.name,
-      age: user.age,
-      yearOfBirth: new Date().getFullYear() - user.age,
-    }
-    return validateUser(userDomain).andThen(createUserFn)
-  }
+const fillUserAttr = (user: UserDto, id: string = new ObjectId().toHexString()): ResultUser =>
+  okAsync({
+    id: id,
+    name: user.name,
+    age: user.age,
+    yearOfBirth: new Date().getFullYear() - user.age,
+  })
 
 const userNotFound = (user: User | null): ResultUser => {
   if (user === null) {
@@ -36,8 +33,13 @@ const userNotFound = (user: User | null): ResultUser => {
   }
 }
 
-export const defaultUserServices = (userRepository: UserRepository) => ({
-  findAll: () => userRepository.findall(),
-  findById: (id: string) => userRepository.findById(id).andThen(userNotFound),
-  create: (user: UserDto, id?: ObjectId) => createUserService(userRepository.createUser)(user, id),
+export const defaultUserServices = (userCollection: UserModel) => ({
+  bla: async (user: User) => await userCollection.create({ data: user }),
+  findAll: () => ResultAsync.fromPromise(userCollection.findMany(), exceptionHandler),
+  findById: (id: string) =>
+    ResultAsync.fromPromise(userCollection.findUnique({ where: { id } }), exceptionHandler).andThen(userNotFound),
+  create: (user: UserDto, id?: string) =>
+    fillUserAttr(user, id)
+      .andThen(validateUser)
+      .map((u) => userCollection.create({ data: u })),
 })

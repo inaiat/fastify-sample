@@ -4,10 +4,10 @@
   "description": "",
   "type": "module",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && yarn generate && tsc",
     "start": "node dist",
     "lint": "eslint . --fix",
     "check-push": "yarn lint && jscpd && yarn coverage && yarn make-badges && yarn tsc",
@@ -15,6 +15,7 @@
     "prepare": "husky install",
     "test": "ava",
     "coverage": "c8 ava",
+    "generate": "prisma generate",
     "make-badges": "istanbul-badges-readme"
   },
   "author": "",
@@ -25,16 +26,16 @@
     "@fastify/sensible": "^5.1.0",
     "@fastify/swagger": "^7.4.1",
     "@fastify/type-provider-typebox": "^2.1.0",
+    "@prisma/client": "^4.1.1",
     "@sinclair/typebox": "^0.24.20",
     "@sindresorhus/is": "^5.2.0",
     "awilix": "^7.0.3",
     "env-schema": "^5.0.0",
     "fastify": "^4.3.0",
     "fastify-plugin": "^4.0.0",
-    "mongodb": "^4.8.0",
+    "mongodb": "^4.8.1",
     "nanoid": "^4.0.0",
-    "neverthrow": "^4.4.2",
-    "papr": "^7.0.1"
+    "neverthrow": "^5.0.0"
   },
   "devDependencies": {
     "@jscpd/badge-reporter": "^3.4.5",
@@ -57,6 +58,7 @@
     "nodemon": "^2.0.19",
     "pino-pretty": "^8.1.0",
     "prettier": "^2.7.1",
+    "prisma": "^4.1.1",
     "regenerator-runtime": "^0.13.9",
     "rimraf": "^3.0.2",
     "strong-mock": "^7.3.0",
@@ -76,7 +78,9 @@
     "absolute": true,
     "gitignore": true,
     "reportersOptions": {
-      "badge": { "path": "./assets/jscpd-badge.svg" }
+      "badge": {
+        "path": "./assets/jscpd-badge.svg"
+      }
     }
   },
   "ava": {
@@ -102,7 +106,7 @@
     "ignore": [
       "src/**/*.spec.ts"
     ],
-    "exec": "ts-node --esm ./src",
+    "exec": "ts-node --experimental-specifier-resolution=node --esm ./src",
     "env": {
       "NODE_DEBUG": 9229,
       "NODE_ENV": "development"
@@ -120,5 +124,6 @@
     "mongodb",
     "ava",
     "test"
-  ]
+  ],
+  "packageManager": "yarn@3.2.2"
 }
