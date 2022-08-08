@@ -9,7 +9,7 @@ type ResultUser = ResultAsync<User, ResultError>
 export type UserServices = ReturnType<typeof defaultUserServices>
 
 const validateUser = (user: User): ResultUser => {
-  if (user.name === 'pareto') {
+  if (user.name === 'admin') {
     return errAsync(exceptionHandler('You are not allowed to register'))
   } else {
     return okAsync(user)
@@ -23,7 +23,7 @@ const createUserService =
       _id: id,
       name: user.name,
       age: user.age,
-      yearOfBirth: new Date().getFullYear() - user.age,
+      phone: user.phone,
     }
     return validateUser(userDomain).andThen(createUserFn)
   }

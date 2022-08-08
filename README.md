@@ -1,5 +1,5 @@
 # fastify-sample
-| ![Statements](https://img.shields.io/badge/statements-77.88%25-red.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-83.33%25-yellow.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-68.75%25-red.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-77.88%25-red.svg?style=flat) | ![jscpd](https://raw.githubusercontent.com/inaiat/fastify-sample/main/assets/jscpd-badge.svg?sanitize=true)
+| ![Statements](https://img.shields.io/badge/statements-78.08%25-red.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-83.33%25-yellow.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-68.75%25-red.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-78.08%25-red.svg?style=flat) | ![jscpd](https://raw.githubusercontent.com/inaiat/fastify-sample/main/assets/jscpd-badge.svg?sanitize=true)
 
 **Fastify version 4 sample with functional approach**
 

@@ -30,8 +30,8 @@ test.beforeEach(async (t) => {
 
 test('find all', async (t) => {
   const findAllResult = okAsync<readonly User[], ResultError>([
-    { name: 'elizeu drummond', age: 65, yearOfBirth: 1957 },
-    { name: 'luiz pareto', age: 22, yearOfBirth: 200 },
+    { name: 'elizeu drummond', age: 65, phone: '2461212' },
+    { name: 'luiz pareto', age: 22, phone: '2461213' },
   ])
 
   when(userRepository.findall()).thenReturn(findAllResult)
@@ -45,7 +45,7 @@ test('find all', async (t) => {
 
 test('should result status 200 on find by id', async (t) => {
   when(userRepository.findById('xyz')).thenReturn(
-    okAsync<UserRepoType>({ _id: new ObjectId(), name: 'elizeu drummond', yearOfBirth: 1965, age: 90 })
+    okAsync<UserRepoType>({ _id: new ObjectId(), name: 'elizeu drummond', phone: '2461212', age: 90 })
   )
 
   const res = await t.context.inject({

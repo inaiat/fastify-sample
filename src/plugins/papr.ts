@@ -6,7 +6,7 @@ import fastifyMongodb from '@fastify/mongodb'
 
 const userSchema = schema({
   name: types.string({ required: true, maxLength: 20 }), //TODO: Just to test mongodb validation
-  yearOfBirth: types.number({ required: true, minimum: 1900 }),
+  phone: types.string({ required: true, minLength: 7, maxLength: 20 }),
   age: types.number({ required: true, minimum: 18, maximum: 200 }),
 })
 
