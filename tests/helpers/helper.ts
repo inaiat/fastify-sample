@@ -1,6 +1,6 @@
 import {join, dirname} from 'node:path'
 import {fileURLToPath} from 'node:url'
-import test, {ExecutionContext} from 'ava'
+import {ExecutionContext} from 'ava'
 import fastifyAutoload from '@fastify/autoload'
 import {NameAndRegistrationPair} from 'awilix'
 import Fastify from 'fastify'

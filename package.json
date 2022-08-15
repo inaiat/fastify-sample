@@ -45,6 +45,8 @@
     "@types/node": "^18.7.3",
     "ava": "^4.3.1",
     "c8": "^7.12.0",
+    "eslint-plugin-functional": "^4.2.2",
+    "eslint-plugin-neverthrow": "^1.1.4",
     "husky": "^8.0.1",
     "istanbul-badges-readme": "^1.8.2",
     "jscpd": "^3.4.5",
@@ -88,27 +90,71 @@
     "ignores": [
       "documentation/examples/*"
     ],
+    "plugins": ["functional", "neverthrow"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      "plugin:functional/no-mutations",
+      "plugin:functional/stylistic",
+      "plugin:functional/no-exceptions",
+      "plugin:functional/external-recommended"
+    ],
     "rules": {
-      "@typescript-eslint/no-empty-function": "off",
       "n/no-deprecated-api": "off",
       "n/prefer-global/url": "off",
       "n/prefer-global/url-search-params": "off",
-      "@typescript-eslint/no-implicit-any-catch": "off",
-      "unicorn/prefer-node-protocol": "off",
+    
       "ava/assertion-arguments": "off",
-      "@typescript-eslint/no-unsafe-member-access": "off",
+      "no-lone-blocks": "off",
+      "new-cap": "off",
+      "import/no-extraneous-dependencies": "off",
+
+      "@typescript-eslint/no-implicit-any-catch": "off",
+      "@typescript-eslint/no-empty-function": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/await-thenable": "off",
       "@typescript-eslint/no-redundant-type-constituents": "off",
-      "no-lone-blocks": "off",
-      "unicorn/no-await-expression-member": "off",
+      "@typescript-eslint/prefer-readonly-parameter-types": "off",
+      "@typescript-eslint/no-misused-promises": "off",
+      "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/naming-convention": "off",
-      "import/no-extraneous-dependencies": "off",
-      "new-cap": "off",
-      "unicorn/no-array-callback-reference": "off"
-    }
+
+      "unicorn/no-await-expression-member": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/prefer-node-protocol": "off",
+
+      "functional/no-method-signature": "off",    
+      "functional/prefer-readonly-type": "off",
+
+      "no-var": "error",
+      "no-param-reassign": "error",
+      "prefer-const": "error",
+      "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/switch-exhaustiveness-check": "error",
+      "neverthrow/must-use-result": "error",
+      "functional/no-let": ["error", { "allowLocalMutation": true }]
+
+    },
+    "overrides": [
+      {
+        "files": "tests/**/*.ts",
+        "rules": {
+          "@typescript-eslint/no-floating-promises": "error",
+          "neverthrow/must-use-result": "off",
+          "functional/no-method-signature": "off",
+          "@typescript-eslint/prefer-readonly-parameter-types": "off",
+          "functional/prefer-readonly-type": "off",
+          "functional/immutable-data": "off",
+          "ava/use-test": "off"
+        }
+      }
+    ]
   },
   "c8": {
     "reporter": [

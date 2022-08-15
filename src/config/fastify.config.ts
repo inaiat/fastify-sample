@@ -47,7 +47,7 @@ const pluginLoader: FastifyPluginAsync = async (fastify, options) => {
 			} else {
 				logger.error(error, 'Error on loading plugin(s)')
 				// If app didn't load all plugins correctly an exception must be throw and app must be break
-				// \\eslint-disable-next-line functional/no-throw-statement
+				// eslint-disable-next-line functional/no-throw-statement
 				throw error
 			}
 		})
